@@ -1,0 +1,114 @@
+\documentclass[12pt]{book}
+\usepackage[a4paper,left=1cm,right=1cm,top=3cm,bottom=4cm,bindingoffset=5mm]{geometry}
+\usepackage{fancyhdr}
+%\usepackage{lscape} %für Querfromat
+\usepackage{cancel} %um was in durchzustreichen
+\usepackage{paralist} %um in enumerate einfach andere Sachen anzugeben
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subcaption}
+\usepackage{todonotes}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+%\usepackage{MnSymbol}
+\usepackage{mathabx} % damit man Doppelklammern haben kann
+\setlength{\parindent}{0em}  %verhindert Einrücken nach Absatz
+\usepackage{xargs} %
+\usepackage{tikz} %zum zeichnen
+\usepackage{expdlist} % um den Zeilenabstand in description kleiner zu machen
+
+
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+%\setmathfont[range={\lsem,\rsem}]{XITS Math}
+
+% Meine Schrift, die mathe kann
+\usepackage[math]{iwona}
+\usepackage[T1]{fontenc}
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Graph Drawing - Layer Assignment}
+\rhead{ Thomas Dost, Jonas Lange, Francesca Rybicki}
+
+\begin{document}
+ 
+\section*{Subject}
+
+We aim to visualize the \textit{Layer Assignment} phase of the \textit{Layered} layout algorithm step by step.
+
+\todo[inline]{write summarizing stuff here, add source of layered paper}
+
+\section*{Our Approach}
+
+here should be some general information about things we do.
+
+\begin{enumerate}
+    \item first we parse
+    \item then we apply the algorithm
+    \item then we visualize
+\end{enumerate}
+
+\todo[inline]{write general information on your topic here, e.g what is you input, what is yout output, any methods you use.. but don't go into detail yet. this will happen in your very own chapter }
+
+\section*{Approach in detail}
+
+\todo[inline]{write a subchapter about your topic. go into details, if there is something you really want to mention, because its cool or so.. especially try to use stuff from lecture (sources, technical terms, etc. ) if you want to give reasons for your solution. 
+
+Further: explain the input and output formats of your special topic -> iLearn has some MUSTs listed here, be sure you considered those.}
+
+\input{Thomas}
+\input{Jonas}
+\input{Francesca}
+
+
+
+\section*{Schedule}
+
+
+\begin{tabular}{|p{2cm}|*3{p{4.5cm}|}}
+   
+    \hline
+    Date & Thomas & Jonas & Francesca \\
+     \hline
+     \hline
+      10.6.18 & - & - & Window mockup (no functionality) \\
+       \hline
+      11.6.18 & \multicolumn{3}{|c|}{Fill Schedule with your assumptions!!!!} \\
+     \hline
+    ? & Parsing finished & - & - \\
+    \hline
+     ? & - & First approach for Layer assignment & - \\
+    \hline
+     ? & - & - & Animations applied to LA algorithm \\
+    \hline
+   19.6.18 & \multicolumn{3}{|c|}{First Deadline/Demo} \\
+    \hline
+   ? &? & ?&? \\
+   \hline
+   7.7.18 & \multicolumn{3}{|c|}{Complete Documentation} \\
+    \hline
+     9.7.18 &\multicolumn{3}{|c|}{Last Checks?} \\
+     \hline
+     10.7.18 &\multicolumn{3}{|c|}{Finished} \\
+    
+    \hline
+\end{tabular}
+
+
+\todo[inline]{Alle Daten im schedule sollten bis zur Zwischendemo feststehen, damit wir den dort verwenden können. Also tragt gerne viel Zeug hier ein}
+
+\section*{Technical Details}
+
+\todo[inline]{things like class diagrams maybe?}
+
+
+\end{document}
+
+
+
+
+
+
