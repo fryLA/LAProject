@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ElkCoreInfrastructure"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ElkGraphAndDependencies"/>
 	<classpathentry kind="src" path="LayerAssignmentProject/src"/>
+	<classpathentry kind="lib" path="lib/guava-18.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/guava-18.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.alg.common.compaction-0.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.alg.common.compaction-0.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.alg.force-0.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.alg.force-0.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.alg.layered-0.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.alg.layered-0.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.alg.mrtree-0.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.alg.mrtree-0.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.core-0.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.core-0.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.graph-0.3.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.elk.graph-0.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.emf.common-2.12.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.emf.common-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore-2.12.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore-2.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore.xmi-2.12.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.emf.ecore.xmi-2.12.0.jar"/>
 	<classpathentry kind="output" path="LayerAssignmentProject/bin"/>
 </classpath>
