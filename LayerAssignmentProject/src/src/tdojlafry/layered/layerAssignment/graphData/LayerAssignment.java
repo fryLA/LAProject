@@ -5,41 +5,41 @@ import org.eclipse.elk.graph.ElkNode;
 import org.eclipse.elk.graph.properties.Property;
 import org.eclipse.elk.graph.util.ElkGraphUtil;
 
-
 import java.util.*;
 
 public class LayerAssignment {
-    private  Property<Integer> layer = new Property<Integer>("Layer");
+    private Property<Integer> layer = new Property<Integer>("Layer");
     private Property<Integer> positionInLayer = new Property<Integer>("PositionInLayer");
     private Property<Boolean> isDummy = new Property<Boolean>("IsDummy");
+
     /**
-     * Fuehrt fuer den eingegebenen kreisfreien ElkGraphen das Layerassignment aus 
+     * Fuehrt fuer den eingegebenen kreisfreien ElkGraphen das Layerassignment aus
      * 
      * @param layoutGraph
      * @return Eine Veraenderungshistorie des Graphen waehrend des Layerassignments
      */
     public List<MyGraph> assignLayers(ElkNode elkGraph) {
-        
-        //Defaultproperties werden verteilt
-        for(ElkNode n : elkGraph.getChildren()) {
+
+        // Defaultproperties werden verteilt
+        for (ElkNode n : elkGraph.getChildren()) {
             n.setProperty(layer, -1);
             n.setProperty(isDummy, false);
             n.setProperty(positionInLayer, 1);
         }
-        for(ElkEdge e : elkGraph.getContainedEdges()) {
+        for (ElkEdge e : elkGraph.getContainedEdges()) {
             e.setProperty(isDummy, false);
         }
-        
+
         MyGraph layoutGraph = elkGraphToMyGraph(elkGraph);
         List<MyGraph> Verlauf = new ArrayList<MyGraph>();
         Verlauf.add(layoutGraph);
-        
+
         List<ElkNode> nodes = new ArrayList<>(elkGraph.getChildren());
         List<ElkEdge> edges = new ArrayList<>(elkGraph.getContainedEdges());
         List<ElkNode> toBeRemoved;
         int l = 0;
         while (!nodes.isEmpty()) {
-            
+
             // Es werden alle Nodes n in g gesucht, die keine eingehenden Kanten haben
             toBeRemoved = new ArrayList<>();
             for (ElkNode n : nodes) {
@@ -62,26 +62,73 @@ public class LayerAssignment {
             l++;
         }
 
+        // einfuegen von dummynodes
+        edges = new ArrayList<>(elkGraph.getContainedEdges());
+        ElkNode dummy;
+        ElkNode lastDummy;
+        ElkEdge dummyEdge;
+        
+        for (ElkEdge edge : edges) {
+            ElkNode source = ElkGraphUtil.connectableShapeToNode(edge.getSources().get(0));
+            ElkNode target = ElkGraphUtil.connectableShapeToNode(edge.getTargets().get(0));
+            lastDummy = source;
+
+            //iteriere durch alle Layer zwischen source und target
+            for (int i = source.getProperty(layer) + 1; i < target.getProperty(layer); i++) {
+
+                if (i == source.getProperty(layer) + 1) {
+                    // Setze target der Kante auf einen neuen Dummyknoten
+                    dummy = ElkGraphUtil.createNode(elkGraph);
+                    dummy.setProperty(isDummy, true);
+                    dummy.setProperty(layer, i);
+                    dummy.setProperty(positionInLayer, -1);
+                    dummy.setProperty(positionInLayer, getMaxPositionInLayer(dummy.getProperty(layer), elkGraph) + 1);
+                    edge.getTargets().set(0, dummy);
+                    lastDummy = dummy;
+                } else if (i < target.getProperty(layer) - 1) {
+                    //setzte eine neue DummyKante vom letzten Dummyknoten zu einem neuen Dummyknoten
+                    dummy = ElkGraphUtil.createNode(elkGraph);
+                    dummy.setProperty(isDummy, true);
+                    dummy.setProperty(layer, i);
+                    dummy.setProperty(positionInLayer, -1);
+                    dummy.setProperty(positionInLayer, getMaxPositionInLayer(i, elkGraph) + 1);
+                    
+                    dummyEdge = ElkGraphUtil.createEdge(elkGraph);
+                    dummyEdge.setProperty(isDummy, true);
+                    dummyEdge.getSources().set(0, lastDummy);
+                    dummyEdge.getTargets().set(0, dummy);
+                    
+                    lastDummy = dummy;
+                }else {
+                    //setzte eine neue DummyKante vom letzten Dummyknoten zu target
+                    dummyEdge = ElkGraphUtil.createEdge(elkGraph);
+                    dummyEdge.setProperty(isDummy, true);
+                    dummyEdge.getSources().set(0, lastDummy);
+                    dummyEdge.getTargets().set(0, target);
+                }
+                Verlauf.add(elkGraphToMyGraph(elkGraph));
+            }
+        }
         return Verlauf;
     }
 
     public MyGraph elkGraphToMyGraph(ElkNode elkGraph) {
-        
+
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
         Random rand = new Random(218);
-        
-        //Knoten werden aus dem Elkgraphen in die MyGraph datenstrukture uebertragen und mit zufaelligen koordinaten 
-        //versehen
+
+        // Knoten werden aus dem Elkgraphen in die MyGraph datenstrukture uebertragen und mit zufaelligen koordinaten
+        // versehen
         for (ElkNode elkNode : elkGraph.getChildren()) {
             Node node = new Node(rand.nextInt(100) + 1, rand.nextInt(100) + 1);
-            node.layer=elkNode.getProperty(layer);
+            node.layer = elkNode.getProperty(layer);
             node.isDummy = elkNode.getProperty(isDummy);
             node.posInlayer = elkNode.getProperty(positionInLayer);
             nodes.add(node);
         }
-        
-        //Kanten werden aus dem Elkgraphen in die MyGraph datenstruktur uebertragen
+
+        // Kanten werden aus dem Elkgraphen in die MyGraph datenstruktur uebertragen
         for (ElkEdge elkEdge : elkGraph.getContainedEdges()) {
             Node sourceNode = null;
             Node targetNode = null;
@@ -102,7 +149,7 @@ public class LayerAssignment {
 
         return new MyGraph(nodes, edges);
     }
-    
+
     public static List<ElkEdge> getIncommingEdges(List<ElkEdge> edges, ElkNode n) {
         List<ElkEdge> incommingEdges = new ArrayList<>();
 
@@ -124,5 +171,14 @@ public class LayerAssignment {
             }
         }
         return outgoingEdges;
+    }
+
+    public int getMaxPositionInLayer(int layer, ElkNode graph) {
+        int max = 0;
+        for (ElkNode node : graph.getChildren()) {
+            max = Math.max(max, node.getProperty(positionInLayer));
+        }
+
+        return max;
     }
 }
