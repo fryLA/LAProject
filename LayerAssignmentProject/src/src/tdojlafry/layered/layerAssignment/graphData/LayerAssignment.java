@@ -8,9 +8,9 @@ import org.eclipse.elk.graph.util.ElkGraphUtil;
 import java.util.*;
 
 public class LayerAssignment {
-    private Property<Integer> layer = new Property<Integer>("Layer");
-    private Property<Integer> positionInLayer = new Property<Integer>("PositionInLayer");
-    private Property<Boolean> isDummy = new Property<Boolean>("IsDummy");
+    private static final Property<Integer> LAYER = new Property<Integer>("Layer");
+    private static final Property<Integer> POSITION_IN_LAYER = new Property<Integer>("PositionInLayer");
+    private static final Property<Boolean> IS_DUMMY = new Property<Boolean>("IsDummy");
 
     /**
      * Fuehrt fuer den eingegebenen kreisfreien ElkGraphen das Layerassignment aus
@@ -22,12 +22,12 @@ public class LayerAssignment {
 
         // Defaultproperties werden verteilt
         for (ElkNode n : elkGraph.getChildren()) {
-            n.setProperty(layer, -1);
-            n.setProperty(isDummy, false);
-            n.setProperty(positionInLayer, 1);
+            n.setProperty(LAYER, -1);
+            n.setProperty(IS_DUMMY, false);
+            n.setProperty(POSITION_IN_LAYER, 1);
         }
         for (ElkEdge e : elkGraph.getContainedEdges()) {
-            e.setProperty(isDummy, false);
+            e.setProperty(IS_DUMMY, false);
         }
 
         MyGraph layoutGraph = elkGraphToMyGraph(elkGraph);
@@ -51,7 +51,7 @@ public class LayerAssignment {
             // alle oben gefundenen Knoten n werden in das l-te Layer getan und werden fuer die weitere
             // Berrechnung geloescht, so wie alle ausgehenden Kanten von n geloescht werden
             for (ElkNode n : toBeRemoved) {
-                n.setProperty(layer, l);
+                n.setProperty(LAYER, l);
                 nodes.remove(n);
                 List<ElkEdge> outgoingEdges = new ArrayList<>(getOutgoingEdges(edges, n));
                 for (ElkEdge e : outgoingEdges) {
@@ -74,27 +74,27 @@ public class LayerAssignment {
             lastDummy = source;
 
             //iteriere durch alle Layer zwischen source und target
-            for (int i = source.getProperty(layer) + 1; i < target.getProperty(layer); i++) {
+            for (int i = source.getProperty(LAYER) + 1; i < target.getProperty(LAYER); i++) {
 
-                if (i == source.getProperty(layer) + 1) {
+                if (i == source.getProperty(LAYER) + 1) {
                     // Setze target der Kante auf einen neuen Dummyknoten
                     dummy = ElkGraphUtil.createNode(elkGraph);
-                    dummy.setProperty(isDummy, true);
-                    dummy.setProperty(layer, i);
-                    dummy.setProperty(positionInLayer, -1);
-                    dummy.setProperty(positionInLayer, getMaxPositionInLayer(dummy.getProperty(layer), elkGraph) + 1);
+                    dummy.setProperty(IS_DUMMY, true);
+                    dummy.setProperty(LAYER, i);
+                    dummy.setProperty(POSITION_IN_LAYER, -1);
+                    dummy.setProperty(POSITION_IN_LAYER, getMaxPositionInLayer(dummy.getProperty(LAYER), elkGraph) + 1);
                     edge.getTargets().set(0, dummy);
                     lastDummy = dummy;
-                } else if (i < target.getProperty(layer) - 1) {
+                } else if (i < target.getProperty(LAYER) - 1) {
                     //setzte eine neue DummyKante vom letzten Dummyknoten zu einem neuen Dummyknoten
                     dummy = ElkGraphUtil.createNode(elkGraph);
-                    dummy.setProperty(isDummy, true);
-                    dummy.setProperty(layer, i);
-                    dummy.setProperty(positionInLayer, -1);
-                    dummy.setProperty(positionInLayer, getMaxPositionInLayer(i, elkGraph) + 1);
+                    dummy.setProperty(IS_DUMMY, true);
+                    dummy.setProperty(LAYER, i);
+                    dummy.setProperty(POSITION_IN_LAYER, -1);
+                    dummy.setProperty(POSITION_IN_LAYER, getMaxPositionInLayer(i, elkGraph) + 1);
                     
                     dummyEdge = ElkGraphUtil.createEdge(elkGraph);
-                    dummyEdge.setProperty(isDummy, true);
+                    dummyEdge.setProperty(IS_DUMMY, true);
                     dummyEdge.getSources().set(0, lastDummy);
                     dummyEdge.getTargets().set(0, dummy);
                     
@@ -102,7 +102,7 @@ public class LayerAssignment {
                 }else {
                     //setzte eine neue DummyKante vom letzten Dummyknoten zu target
                     dummyEdge = ElkGraphUtil.createEdge(elkGraph);
-                    dummyEdge.setProperty(isDummy, true);
+                    dummyEdge.setProperty(IS_DUMMY, true);
                     dummyEdge.getSources().set(0, lastDummy);
                     dummyEdge.getTargets().set(0, target);
                 }
@@ -122,9 +122,9 @@ public class LayerAssignment {
         // versehen
         for (ElkNode elkNode : elkGraph.getChildren()) {
             Node node = new Node(rand.nextInt(100) + 1, rand.nextInt(100) + 1);
-            node.layer = elkNode.getProperty(layer);
-            node.isDummy = elkNode.getProperty(isDummy);
-            node.posInlayer = elkNode.getProperty(positionInLayer);
+            node.layer = elkNode.getProperty(LAYER);
+            node.isDummy = elkNode.getProperty(IS_DUMMY);
+            node.posInlayer = elkNode.getProperty(POSITION_IN_LAYER);
             nodes.add(node);
         }
 
@@ -143,7 +143,7 @@ public class LayerAssignment {
                 }
             }
             edge = new Edge(sourceNode, targetNode);
-            edge.isDummy = elkEdge.getProperty(isDummy);
+            edge.isDummy = elkEdge.getProperty(IS_DUMMY);
             edges.add(edge);
         }
 
@@ -176,7 +176,7 @@ public class LayerAssignment {
     public int getMaxPositionInLayer(int layer, ElkNode graph) {
         int max = 0;
         for (ElkNode node : graph.getChildren()) {
-            max = Math.max(max, node.getProperty(positionInLayer));
+            max = Math.max(max, node.getProperty(POSITION_IN_LAYER));
         }
 
         return max;
