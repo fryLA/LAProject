@@ -8,6 +8,7 @@ import src.tdojlafry.layered.layerAssignment.graphData.Edge;
 import src.tdojlafry.layered.layerAssignment.graphData.LayerAssignment;
 import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
 import src.tdojlafry.layered.layerAssignment.graphData.Node;
+import src.tdojlafry.layered.layerAssignment.gui.LayerAssignmentView;
 import src.tdojlafry.layered.layerAssignment.testStuff.GuiTestDataCreator;
 
 public class LayerAssignmentMain {
@@ -37,6 +38,9 @@ public class LayerAssignmentMain {
                 System.out.println(edge.isDummy());
             }
         }
+        
+        LayerAssignmentView laView = new LayerAssignmentView(data);
+        laView.visualize();
     }
 
 }
