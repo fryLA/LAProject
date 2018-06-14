@@ -1,20 +1,52 @@
 package src.tdojlafry.layered.layerAssignment.graphData;
 public class Node {
     
-    int layer = -1;
+    private int layer = -1;
     
-    int posInlayer = -1;
+    private int posInlayer = -1;
     
-    Position position = new Position();
+    private Position position = new Position();
     
-    boolean isDummy = false;
+    private boolean isDummy = false;
     
     public Node() {
         
     }
     
     public Node(double x, double y) {
-        this.position.x = x;
-        this.position.y = y;
+        this.getPosition().x = x;
+        this.getPosition().y = y;
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
+    }
+
+    public int getPosInlayer() {
+        return posInlayer;
+    }
+
+    public void setPosInlayer(int posInlayer) {
+        this.posInlayer = posInlayer;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public boolean isDummy() {
+        return isDummy;
+    }
+
+    public void setDummy(boolean isDummy) {
+        this.isDummy = isDummy;
     }
 }

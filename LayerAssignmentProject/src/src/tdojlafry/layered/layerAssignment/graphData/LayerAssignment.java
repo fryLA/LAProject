@@ -11,6 +11,9 @@ public class LayerAssignment {
     private Property<Integer> layer = new Property<Integer>("Layer");
     private Property<Integer> positionInLayer = new Property<Integer>("PositionInLayer");
     private Property<Boolean> isDummy = new Property<Boolean>("IsDummy");
+    
+    public LayerAssignment() {
+    }
 
     /**
      * Fuehrt fuer den eingegebenen kreisfreien ElkGraphen das Layerassignment aus
@@ -122,9 +125,9 @@ public class LayerAssignment {
         // versehen
         for (ElkNode elkNode : elkGraph.getChildren()) {
             Node node = new Node(rand.nextInt(100) + 1, rand.nextInt(100) + 1);
-            node.layer = elkNode.getProperty(layer);
-            node.isDummy = elkNode.getProperty(isDummy);
-            node.posInlayer = elkNode.getProperty(positionInLayer);
+            node.setLayer(elkNode.getProperty(layer));
+            node.setDummy(elkNode.getProperty(isDummy));
+            node.setPosInlayer(elkNode.getProperty(positionInLayer));
             nodes.add(node);
         }
 
@@ -143,7 +146,7 @@ public class LayerAssignment {
                 }
             }
             edge = new Edge(sourceNode, targetNode);
-            edge.isDummy = elkEdge.getProperty(isDummy);
+            edge.setDummy(elkEdge.getProperty(isDummy));
             edges.add(edge);
         }
 

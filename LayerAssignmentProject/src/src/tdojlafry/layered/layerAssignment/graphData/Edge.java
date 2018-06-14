@@ -5,11 +5,19 @@ public class Edge {
     public Node startNode;
     public Node endNode;
     
-    boolean isDummy = false;
+    private boolean isDummy = false;
     
     public Edge(Node sn, Node en) {
         this.startNode = sn;
         this.endNode = en;
+    }
+
+    public boolean isDummy() {
+        return isDummy;
+    }
+
+    public void setDummy(boolean isDummy) {
+        this.isDummy = isDummy;
     }
     
 }
