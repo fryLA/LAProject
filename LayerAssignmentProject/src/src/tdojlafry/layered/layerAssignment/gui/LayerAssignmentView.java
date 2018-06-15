@@ -15,18 +15,22 @@ public class LayerAssignmentView{
         this.graphs = graphs;
     }
     
+
     public void visualize() {
-        LayerAssignmentVisualizer visualizer = new LayerAssignmentVisualizer();
-        visualizer.createView(500, 500);
         
         int layerCnt = 0;
+        
         for (Node node : graphs.get(graphs.size() - 1).getNodes()) {
             if (node.getLayer() > layerCnt) {
                 layerCnt = node.getLayer();
             }
         }
         
-        visualizer.initialize(graphs.get(0), layerCnt);
+        LayerAssignmentVisualizer visualizer = new LayerAssignmentVisualizer(layerCnt);
+        visualizer.createView(500, 500);
+        
+        
+        visualizer.initialize(graphs.get(0));
         
         
         visualizer.update();
