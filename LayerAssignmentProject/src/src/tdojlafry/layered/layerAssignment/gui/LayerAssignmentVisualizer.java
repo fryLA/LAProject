@@ -2,6 +2,7 @@ package src.tdojlafry.layered.layerAssignment.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -137,8 +139,8 @@ public class LayerAssignmentVisualizer implements ActionListener {
         JToolBar toolbar = new JToolBar("Control");
         addButtons(toolbar);
         rootPanel.add(toolbar, BorderLayout.PAGE_START);
-        // Create graph panel
 
+        // Create graph panel
         layerPanel = new JPanel();
         GridLayout g = new GridLayout(1, 1);
         layerPanel.setLayout(g);
@@ -151,6 +153,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
     private void addButtons(JToolBar toolbar) {
 
         stepSlider = new JSlider(JSlider.HORIZONTAL, 0, layerCnt, 1);
+        stepSlider.setToolTipText("Define step size");
         stepSlider.setMajorTickSpacing(5);
         stepSlider.setMinorTickSpacing(1);
         stepSlider.createStandardLabels(1);
@@ -173,47 +176,43 @@ public class LayerAssignmentVisualizer implements ActionListener {
                 String typed = stepSizeText.getText();
                 if (typed.isEmpty()) {
                     return;
-                }
-                else if(!typed.matches("\\d+")) {
-                    JOptionPane.showMessageDialog(null,
-                            "Error: Please enter number between 0 and " + layerCnt + ".", "Error Massage",
-                            JOptionPane.ERROR_MESSAGE);
-                   
+                } else if (!typed.matches("\\d+")) {
+                    JOptionPane.showMessageDialog(null, "Error: Please enter number between 0 and " + layerCnt + ".",
+                            "Error Massage", JOptionPane.ERROR_MESSAGE);
+
                     return;
                 } else if (Integer.parseInt(typed) < 0 || Integer.parseInt(typed) > layerCnt) {
-                    JOptionPane.showMessageDialog(null,
-                            "Error: Please enter number between 0 and " + layerCnt + ".", "Error Massage",
-                            JOptionPane.ERROR_MESSAGE);
-                        stepSizeText.setText(String.valueOf(stepSize));
-                        return;
+                    JOptionPane.showMessageDialog(null, "Error: Please enter number between 0 and " + layerCnt + ".",
+                            "Error Massage", JOptionPane.ERROR_MESSAGE);
+                    stepSizeText.setText(String.valueOf(stepSize));
+                    return;
                 }
                 int value = Integer.parseInt(typed);
                 stepSlider.setValue(value);
             }
         });
-        
 
         toolbar.add(stepSlider);
         toolbar.add(stepSizeText);
 
-        playButton = createButton("play_en.png", PLAY, "Start/Resume execution");
+        playButton = createButton("play_en.png", PLAY, "Start/Resume execution", true);
         toolbar.add(playButton);
 
-        pauseButton = createButton("pause_dis.png", PAUSE, "Pause execution");
+        pauseButton = createButton("pause_en.png", PAUSE, "Pause execution", false);
         toolbar.add(pauseButton);
 
-        resetButton = createButton("reset_dis.png", RESET, "Reset execution");
+        resetButton = createButton("reset_en.png", RESET, "Reset execution", false);
         toolbar.add(resetButton);
 
-        jumpFwd = createButton("fwd_en.png", FWD, "Jump " + stepSize + " steps forward");
+        jumpFwd = createButton("fwd_en.png", FWD, "Jump forward", true);
         toolbar.add(jumpFwd);
 
-        jumpBck = createButton("bck_dis.png", BCK, "Jump " + stepSize + " steps backward");
+        jumpBck = createButton("bck_en.png", BCK, "Jump backward", false);
         toolbar.add(jumpBck);
 
     }
 
-    private JButton createButton(String location, String actionID, String tooltip) {
+    private JButton createButton(String location, String actionID, String tooltip, boolean enabled) {
 
         final int width = 20;
         final int height = 20;
@@ -222,6 +221,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
         JButton button = new JButton(icon);
         button.setActionCommand(actionID);
         button.setToolTipText(tooltip);
+        button.setEnabled(enabled);
         button.addActionListener(this);
 
         return button;
@@ -237,8 +237,39 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+        String cmd = e.getActionCommand();
+        String description = null;
+
+        switch (cmd) {
+        case PLAY: 
+            enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), false);
+            enableComponents(Arrays.asList(pauseButton), true);
+            break;
+        case PAUSE: 
+            enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
+            enableComponents(Arrays.asList(pauseButton), false);
+            break;
+        case RESET: 
+            enableComponents(Arrays.asList(playButton, jumpFwd, stepSizeText, stepSlider), true);
+            enableComponents(Arrays.asList(pauseButton, resetButton, jumpBck), false);
+            break;
+        case FWD: 
+            enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
+            enableComponents(Arrays.asList(pauseButton), false);
+            break;
+        case BCK: 
+            enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
+            enableComponents(Arrays.asList(pauseButton), false);
+            break;
+        }
 
     }
+    
+    private void enableComponents(List<Component> components, boolean enablement) {
+        for (Component comp : components) {
+            comp.setEnabled(enablement);
+        }
+    }
+    
 
 }
