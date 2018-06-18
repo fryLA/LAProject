@@ -1,6 +1,10 @@
 package parser;
+import org.eclipse.elk.graph.ElkEdge;
+import org.eclipse.elk.graph.ElkLabel;
 import org.eclipse.elk.graph.ElkNode;
+import org.eclipse.elk.graph.util.ElkGraphUtil;
 
+import java.awt.Label;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,6 +17,8 @@ public class Parser
 {
 	public static List<String> nodes;
 	public static Map<String, ArrayList<String>> edges;
+	
+	
 	public static ElkNode parse(String filename) throws IOException
 	{
 		nodes = new ArrayList<String>();
@@ -54,8 +60,70 @@ public class Parser
 			}
 			
 		}
+		
+		
+		
+		ElkNode parentNode = ElkGraphUtil.createNode(null);
+		//		DIE KOMPLEXITÄT SUCKT
+        for (int i = 0; i < nodes.size(); i++) {
+            ElkNode newNode = ElkGraphUtil.createNode(parentNode);
+            ElkLabel newLabel = ElkGraphUtil.createLabel(newNode);
+            newLabel.setText(nodes.get(i));
+            
+            
+        }
+//        
+        
+        
+        
+        for (int i = 0; i < nodes.size(); i++) 
+        {
+        	Iterator<ElkNode> elkNodes = parentNode.getChildren().iterator();
+            ElkNode currNode = elkNodes.next();
+        
+        	List<String> currentEdges = edges.get(i);
+        	if(currentEdges != null)
+        	{
+        		for(int j = 0; j < currentEdges.size(); j++)
+            	{
+            		ElkEdge newEdge = ElkGraphUtil.createEdge(parentNode);
+        			newEdge.getSources().add(currNode);
+            		while(elkNodes.hasNext())
+            		{
+            			if(currNode.getLabels().get(0).getText() == currentEdges.get(j))
+            			{
+            				newEdge.getTargets().add(currNode);
+            			}
+            			currNode = elkNodes.next();
+            		}
+            		
+            	}
+        	}
+        	
+        }
+//
+//        while(nodes.hasNext()) {
+//            ElkEdge newEdge = ElkGraphUtil.createEdge(parentNode);
+//            newEdge.getSources().add(currNode);
+//            List<ElkNode> targetNodes = null;
+//            for(ElkNode node : targetNodes)
+//            {
+//            	newEdge.getTargets().add(node);
+//            }
+//            
+//        }
+//        
+        
 		return null;
+		
+		
+//		Erste alle nodes aus der Lsiste in elknodes, dann ieelk nodes durchgehen und fuer alles nodes in der liste die liste durchgehen udn die passenden edges hinzufügen
+		
+		
 	}
+	
+	
+	
 	
 	public static List<String> readSmallTextFile(String aFileName) throws IOException {
 	    Path path = Paths.get(aFileName);
