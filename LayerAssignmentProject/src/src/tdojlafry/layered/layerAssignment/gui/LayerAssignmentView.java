@@ -18,23 +18,13 @@ public class LayerAssignmentView{
 
     public void visualize() {
         
-        int layerCnt = 0;
         
-        for (Node node : graphs.get(graphs.size() - 1).getNodes()) {
-            if (node.getLayer() > layerCnt) {
-                layerCnt = node.getLayer();
-            }
-        }
-        layerCnt++;
         
-        LayerAssignmentVisualizer visualizer = new LayerAssignmentVisualizer(layerCnt);
+        LayerAssignmentVisualizer visualizer = new LayerAssignmentVisualizer(graphs);
+        
         visualizer.createView(500, 500);
+        visualizer.initialize();
         
-        
-        visualizer.initialize(graphs.get(0));
-        
-        
-        visualizer.update();
     }
     
     
