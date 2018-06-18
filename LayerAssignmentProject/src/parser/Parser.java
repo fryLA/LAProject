@@ -15,16 +15,23 @@ import java.nio.charset.StandardCharsets;
 
 public class Parser 
 {
-	public static List<String> nodes;
-	public static Map<String, ArrayList<String>> edges;
+//	Liste von Nodes als Strings
+	private static List<String> nodes;
+//	adjazenzliste
+	private static Map<String, ArrayList<String>> edges;
+//	The graph in elk format
+	private static ElkNode parentNode;
 	
 	
 	public static ElkNode parse(String filename) throws IOException
 	{
 		nodes = new ArrayList<String>();
 		edges = new HashMap<String, ArrayList<String>>();
+		
 		List<String >lines = readSmallTextFile(filename);
-
+	   parentNode = ElkGraphUtil.createNode(null);
+		
+		
 		
 		for(String line : lines)
 		{
@@ -63,7 +70,7 @@ public class Parser
 		
 		
 		
-		ElkNode parentNode = ElkGraphUtil.createNode(null);
+	
 		//		DIE KOMPLEXITÄT SUCKT
         for (int i = 0; i < nodes.size(); i++) {
             ElkNode newNode = ElkGraphUtil.createNode(parentNode);
@@ -101,20 +108,9 @@ public class Parser
         	}
         	
         }
-//
-//        while(nodes.hasNext()) {
-//            ElkEdge newEdge = ElkGraphUtil.createEdge(parentNode);
-//            newEdge.getSources().add(currNode);
-//            List<ElkNode> targetNodes = null;
-//            for(ElkNode node : targetNodes)
-//            {
-//            	newEdge.getTargets().add(node);
-//            }
-//            
-//        }
-//        
+
         
-		return null;
+		return parentNode;
 		
 		
 //		Erste alle nodes aus der Lsiste in elknodes, dann ieelk nodes durchgehen und fuer alles nodes in der liste die liste durchgehen udn die passenden edges hinzufügen
