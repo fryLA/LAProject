@@ -1,0 +1,7 @@
+node n1
+node n2
+node n3
+
+edge n1 n2
+edge n2 n1
+edge n3 n2 
