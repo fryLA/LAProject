@@ -41,6 +41,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
     JPanel layerPanel;
 
     Integer stepSize = 1;
+    int currentStep = 0;
     JTextField stepSizeText;
 
     GraphDrawer gd;
@@ -65,19 +66,25 @@ public class LayerAssignmentVisualizer implements ActionListener {
     private static final String FWD = "fwd";
     private static final String BCK = "bck";
     private static final String RESET = "reset";
+    
 
     // for button enablements and stuff
     private boolean initial = true; // enabled: play, fwd, bck. disabled: pause, reset.
     private boolean paused = false; // enabled: play, fwd, bck, reset. disabled: pause.
     private boolean active = false; // enabled: pause. disabled: play, fwd, bck, reset.
+    
+    private List<MyGraph> graphs;
 
-    protected LayerAssignmentVisualizer(int layerCnt) {
-
+    protected LayerAssignmentVisualizer( List<MyGraph> graphs) {
+        
+        layerCnt = graphs.size() - 1;
+        
+        
         if (layerCnt == 0) {
             JOptionPane.showMessageDialog(null, "No layers assigned " + layerCnt + ".",
                     "Error Massage", JOptionPane.ERROR_MESSAGE);
         }
-        this.layerCnt = layerCnt;
+        this.graphs = graphs;
         
 
     }
@@ -108,7 +115,9 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
     }
 
-    void initialize(MyGraph initialDrawing) {
+    void initialize() {
+        
+        MyGraph initialDrawing = graphs.get(0);
 
         // Add not layouted Graph
         List<Node> nodes = initialDrawing.getNodes();
@@ -118,16 +127,10 @@ public class LayerAssignmentVisualizer implements ActionListener {
         double height = 5.0;
 
         gd = new GraphDrawer(nodes, edges, width, height, layerCnt);
-        // gd.setSize(gd.getPreferredSize().width, gd.getPreferredSize().height);
-        // int x = (int) (layerPanel.getWidth() - gd.getPreferredSize().getWidth());
-        // int y = (int) (layerPanel.getHeight() - gd.getPreferredSize().getHeight());
-        // System.out.println(x + " : "+ y);
-        // gd.setLocation(x, y);
         Border blackline = BorderFactory.createLineBorder(Color.black);
         gd.setBorder(blackline);
 
         layerPanel.add(gd);
-        frame.setVisible(true);
 
     }
 
@@ -141,7 +144,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
         // Create the control toolbar
         JToolBar toolbar = new JToolBar("Control");
         addButtons(toolbar);
-        rootPanel.add(toolbar, BorderLayout.PAGE_START);
+        rootPanel.add(toolbar, BorderLayout.PAGE_END);
 
         // Create graph panel
         layerPanel = new JPanel();
@@ -241,7 +244,6 @@ public class LayerAssignmentVisualizer implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
-        String description = null;
 
         switch (cmd) {
         case PLAY: 
@@ -259,10 +261,22 @@ public class LayerAssignmentVisualizer implements ActionListener {
         case FWD: 
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
+            if (currentStep + stepSize <= layerCnt) {
+                currentStep += stepSize;
+            } else {
+                currentStep = layerCnt;
+            }
+            gd.update(graphs.get(currentStep));
             break;
         case BCK: 
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
+            if (currentStep - stepSize >= 0) {
+                currentStep -= stepSize;
+            } else {
+                currentStep = 0;
+            }
+            gd.update(graphs.get(currentStep - stepSize));
             break;
         }
 

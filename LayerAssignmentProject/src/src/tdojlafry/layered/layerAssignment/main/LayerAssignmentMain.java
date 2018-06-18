@@ -17,8 +17,8 @@ public class LayerAssignmentMain {
 
     public static void main(String[] args) {
         try {
-//        ElkNode testGraph = GuiTestDataCreator.createSimpleLayoutGraph(10);
-            ElkNode testGraph = Parser.parse("testGraphs/testfile.txt");
+        ElkNode testGraph = GuiTestDataCreator.createSimpleLayoutGraph(10);
+//            ElkNode testGraph = Parser.parse("testGraphs/testfile.txt");
         
         LayerAssignment la = new LayerAssignment();
         List<MyGraph> data =  la.assignLayers(testGraph);
