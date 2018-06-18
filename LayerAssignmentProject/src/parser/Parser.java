@@ -95,13 +95,16 @@ public class Parser
         	Iterator<ElkNode> elkNodes = parentNode.getChildren().iterator();
             ElkNode currNode = elkNodes.next();
 //          Speichere edges die zur jetzigen Node gehören
-        	List<String> currentEdges = edges.get(i);
+        	List<String> currentEdges = edges.get(nodes.get(i));
 //        	Testen ueberhaupt Kanten zu diesem Knoten(nodes.get(i) existieren.
+        	System.out.println("TEST0");
         	if(currentEdges != null)
         	{
+        		System.out.println("TEST1");
 //        		Uber alle kanten iterieren
         		for(int j = 0; j < currentEdges.size(); j++)
             	{
+            		System.out.println("TEST222");
 //        			Kante erzeugen
             		ElkEdge newEdge = ElkGraphUtil.createEdge(parentNode);
 //            		Start der Kante initialiseren
@@ -125,7 +128,9 @@ public class Parser
         }
 
 //        Graphen der gelayered werden soll returnen
+        System.out.println(parentNode.getContainedEdges().size());
 		return parentNode;
+		
 	}
 	
 	
