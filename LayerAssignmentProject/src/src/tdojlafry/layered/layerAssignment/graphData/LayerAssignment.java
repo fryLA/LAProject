@@ -12,6 +12,11 @@ public class LayerAssignment {
     private static final Property<Integer> POSITION_IN_LAYER = new Property<Integer>("PositionInLayer");
     private static final Property<Boolean> IS_DUMMY = new Property<Boolean>("IsDummy");
 
+    
+    public LayerAssignment() {
+    }
+
+
     /**
      * Fuehrt fuer den eingegebenen kreisfreien ElkGraphen das Layerassignment aus
      * 
@@ -125,6 +130,7 @@ public class LayerAssignment {
             node.layer = elkNode.getProperty(LAYER);
             node.isDummy = elkNode.getProperty(IS_DUMMY);
             node.posInlayer = elkNode.getProperty(POSITION_IN_LAYER);
+
             nodes.add(node);
         }
 
@@ -144,6 +150,7 @@ public class LayerAssignment {
             }
             edge = new Edge(sourceNode, targetNode);
             edge.isDummy = elkEdge.getProperty(IS_DUMMY);
+
             edges.add(edge);
         }
 
