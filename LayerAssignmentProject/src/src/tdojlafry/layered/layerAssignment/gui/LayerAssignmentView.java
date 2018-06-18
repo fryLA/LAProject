@@ -25,6 +25,7 @@ public class LayerAssignmentView{
                 layerCnt = node.getLayer();
             }
         }
+        layerCnt++;
         
         LayerAssignmentVisualizer visualizer = new LayerAssignmentVisualizer(layerCnt);
         visualizer.createView(500, 500);

@@ -1,9 +1,11 @@
 package src.tdojlafry.layered.layerAssignment.main;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.elk.graph.ElkNode;
 
+import parser.Parser;
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
 import src.tdojlafry.layered.layerAssignment.graphData.LayerAssignment;
 import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
@@ -14,7 +16,9 @@ import src.tdojlafry.layered.layerAssignment.testStuff.GuiTestDataCreator;
 public class LayerAssignmentMain {
 
     public static void main(String[] args) {
-        ElkNode testGraph = GuiTestDataCreator.createSimpleLayoutGraph(10);
+        try {
+//        ElkNode testGraph = GuiTestDataCreator.createSimpleLayoutGraph(10);
+            ElkNode testGraph = Parser.parse("testGraphs/testfile.txt");
         
         LayerAssignment la = new LayerAssignment();
         List<MyGraph> data =  la.assignLayers(testGraph);
@@ -41,6 +45,9 @@ public class LayerAssignmentMain {
         
         LayerAssignmentView laView = new LayerAssignmentView(data);
         laView.visualize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

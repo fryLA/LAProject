@@ -27,8 +27,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
 import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
@@ -75,7 +73,12 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
     protected LayerAssignmentVisualizer(int layerCnt) {
 
+        if (layerCnt == 0) {
+            JOptionPane.showMessageDialog(null, "No layers assigned " + layerCnt + ".",
+                    "Error Massage", JOptionPane.ERROR_MESSAGE);
+        }
         this.layerCnt = layerCnt;
+        
 
     }
 
@@ -209,7 +212,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
         jumpBck = createButton("bck_en.png", BCK, "Jump backward", false);
         toolbar.add(jumpBck);
-
+        
     }
 
     private JButton createButton(String location, String actionID, String tooltip, boolean enabled) {
