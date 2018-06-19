@@ -131,6 +131,8 @@ public class LayerAssignmentVisualizer implements ActionListener {
         gd.setBorder(blackline);
 
         layerPanel.add(gd);
+        
+        frame.setVisible(true);
 
     }
 
