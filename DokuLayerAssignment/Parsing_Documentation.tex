@@ -1,5 +1,7 @@
 
 
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
 
 \subsection*{Parsing}
 Die Parsing-Klasse ist dafür zustädnig das eigens erstelle Textformate einzulesen
@@ -7,36 +9,40 @@ und in einen ElkGraph umzuwandeln
 
 \subsubsection*{Syntax}
 Eine Node hinzufügen:
-  node_<node name>
-  
-Eine Edge hinzufügen:
-  edge_<start node>_<end node>
- 
-Wobei _ für beliebig viele Whitespaces steht,
+\newline
+\tab[0.5cm]  node \_$<$node name$>$
+\newline
+\newline
+Eine Edge hinzufügen:\newline
+\tab[0.5cm]  edge\_$<$start node$>$ \_$<$end node$>$
+\newline
+Wobei \_ für beliebig viele Whitespaces steht,
 weiter muss jeder Knoten der von einer edge benutzt wird vorher mit dem \textit{node} Keyword eingeführt werden
 
 \subsubsection*{How to use the parser}
 try 
-{ 
-  ElkNode testGraph = Parser.parse("testGraphs/testfile.txt");
-} 
+\{\newline
+ElkNode testGraph = Parser.parse("testGraphs/testfile.txt");
+\newline
+\}
+\newline
 catch (Exception e)
-{
-  e.printStackTrace();        
-}
+\newline
+\{
+\newline
+  e.printStackTrace(); 
+\newline
+\}
 
 
 \subsubsection*{Example}
-node n1
-node n2
-node n3
-
-
-edge n1 n3
-edge n2 n3 
-
-
-
+node n1 \newline
+node n2 \newline
+node n3 \newline
+\newline
+\newline
+edge n1 n3\newline 
+edge n2 n3 \newline
 
 
 
