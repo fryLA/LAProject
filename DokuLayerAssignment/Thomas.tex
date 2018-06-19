@@ -15,6 +15,17 @@ Eine Edge hinzufügen:
 Wobei _ für beliebig viele Whitespaces steht,
 weiter muss jeder Knoten der von einer edge benutzt wird vorher mit dem \textit{node} Keyword eingeführt werden
 
+\subsubsection*{How to use the parser}
+try 
+{ 
+  ElkNode testGraph = Parser.parse("testGraphs/testfile.txt");
+} 
+catch (Exception e)
+{
+  e.printStackTrace();        
+}
+
+
 \subsubsection*{Example}
 node n1
 node n2
