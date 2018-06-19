@@ -2,6 +2,29 @@
 
 
 \subsection*{Parsing}
+Die Parsing-Klasse ist dafür zustädnig das eigens erstelle Textformate einzulesen
+und in einen ElkGraph umzuwandeln
+
+\subsubsection*{Syntax}
+Eine Node hinzufügen:
+  node_<node name>
+  
+Eine Edge hinzufügen:
+  edge_<start node>_<end node>
+ 
+Wobei _ für beliebig viele Whitespaces steht,
+weiter muss jeder Knoten der von einer edge benutzt wird vorher mit dem \textit{node} Keyword eingeführt werden
+
+\subsubsection*{Example}
+node n1
+node n2
+node n3
+
+
+edge n1 n3
+edge n2 n3 
+
+
 
 
 
