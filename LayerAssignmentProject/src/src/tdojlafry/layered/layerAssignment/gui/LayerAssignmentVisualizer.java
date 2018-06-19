@@ -66,26 +66,23 @@ public class LayerAssignmentVisualizer implements ActionListener {
     private static final String FWD = "fwd";
     private static final String BCK = "bck";
     private static final String RESET = "reset";
-    
 
     // for button enablements and stuff
     private boolean initial = true; // enabled: play, fwd, bck. disabled: pause, reset.
     private boolean paused = false; // enabled: play, fwd, bck, reset. disabled: pause.
     private boolean active = false; // enabled: pause. disabled: play, fwd, bck, reset.
-    
+
     private List<MyGraph> graphs;
 
-    protected LayerAssignmentVisualizer( List<MyGraph> graphs) {
-        
+    protected LayerAssignmentVisualizer(List<MyGraph> graphs) {
+
         layerCnt = graphs.size() - 1;
-        
-        
+
         if (layerCnt == 0) {
-            JOptionPane.showMessageDialog(null, "No layers assigned " + layerCnt + ".",
-                    "Error Massage", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "No layers assigned " + layerCnt + ".", "Error Massage",
+                    JOptionPane.ERROR_MESSAGE);
         }
         this.graphs = graphs;
-        
 
     }
 
@@ -116,7 +113,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
     }
 
     void initialize() {
-        
+
         MyGraph initialDrawing = graphs.get(0);
 
         // Add not layouted Graph
@@ -131,7 +128,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
         gd.setBorder(blackline);
 
         layerPanel.add(gd);
-        
+
         frame.setVisible(true);
 
     }
@@ -217,7 +214,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
         jumpBck = createButton("bck_en.png", BCK, "Jump backward", false);
         toolbar.add(jumpBck);
-        
+
     }
 
     private JButton createButton(String location, String actionID, String tooltip, boolean enabled) {
@@ -248,19 +245,19 @@ public class LayerAssignmentVisualizer implements ActionListener {
         String cmd = e.getActionCommand();
 
         switch (cmd) {
-        case PLAY: 
+        case PLAY:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), false);
             enableComponents(Arrays.asList(pauseButton), true);
             break;
-        case PAUSE: 
+        case PAUSE:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
             break;
-        case RESET: 
+        case RESET:
             enableComponents(Arrays.asList(playButton, jumpFwd, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton, resetButton, jumpBck), false);
             break;
-        case FWD: 
+        case FWD:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
             if (currentStep + stepSize <= layerCnt) {
@@ -270,7 +267,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
             }
             gd.update(graphs.get(currentStep));
             break;
-        case BCK: 
+        case BCK:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
             if (currentStep - stepSize >= 0) {
@@ -283,12 +280,11 @@ public class LayerAssignmentVisualizer implements ActionListener {
         }
 
     }
-    
+
     private void enableComponents(List<Component> components, boolean enablement) {
         for (Component comp : components) {
             comp.setEnabled(enablement);
         }
     }
-    
 
 }

@@ -1,11 +1,9 @@
 package src.tdojlafry.layered.layerAssignment.main;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.elk.graph.ElkNode;
 
-import parser.Parser;
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
 import src.tdojlafry.layered.layerAssignment.graphData.LayerAssignment;
 import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
@@ -17,14 +15,17 @@ public class LayerAssignmentMain {
 
     public static void main(String[] args) {
         try {
-        ElkNode testGraph = GuiTestDataCreator.createSimpleLayoutGraph(10);
-//            ElkNode testGraph = Parser.parse("testGraphs/testfile.txt");
+            
+            // USE THIS FOR TESTING (only one of the following two lines at a time)
+        ElkNode testGraph = GuiTestDataCreator.createSimpleLayoutGraph(10); // ignores parsing
+//            ElkNode testGraph = Parser.parse("testGraphs/testfile.txt"); // does not ignore parsing
         
         LayerAssignment la = new LayerAssignment();
         List<MyGraph> data =  la.assignLayers(testGraph);
         
         for (int i = 0; i < data.size(); i ++) {
             
+            // Some debug info as long as there is no animation for layer assignment
             System.out.println("\n\nGraph " + i);
             List<Node> nodes = data.get(i).getNodes();
             for (Node node : nodes) {
