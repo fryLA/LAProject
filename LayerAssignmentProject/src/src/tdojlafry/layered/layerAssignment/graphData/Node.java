@@ -13,7 +13,7 @@ public class Node {
         
     }
     
-    public Node(double x, double y) {
+    public Node(int x, int y) {
         this.getPosition().x = x;
         this.getPosition().y = y;
     }

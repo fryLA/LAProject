@@ -2,14 +2,14 @@ package src.tdojlafry.layered.layerAssignment.graphData;
 
 public class Position{
     
-    public double x = 0.0;
-    public double y = 0.0;
+    public int x = 0;
+    public int y = 0;
     
     public Position() {
         
     }
     
-    public Position(double a, double b) {
+    public Position(int a, int b) {
         this.x = a;
         this.y = b;
     }
