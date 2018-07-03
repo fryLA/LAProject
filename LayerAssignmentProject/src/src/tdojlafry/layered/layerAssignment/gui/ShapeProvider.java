@@ -16,10 +16,10 @@ class ShapeProvider {
     protected static void drawArrow(Graphics g1, Edge e, boolean inLayer) {
 
         Graphics2D g = (Graphics2D) g1.create();
-        double x1 = e.getStartPostition(inLayer).x;
-        double y1 = e.getStartPostition(inLayer).y;
-        double x2 = e.getEndPostition(inLayer).x;
-        double y2 = e.getEndPostition(inLayer).y;
+        double x1 = e.getStartPostition().x;
+        double y1 = e.getStartPostition().y;
+        double x2 = e.getEndPostition().x;
+        double y2 = e.getEndPostition().y;
 
         double dx = x2 - x1, dy = y2 - y1;
         double angle = Math.atan2(dy, dx);

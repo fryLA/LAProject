@@ -13,7 +13,7 @@ public class Node {
     // Minimap position based on windows size
     public Position scaledPosition = new Position();
     
-    public Position currentPosition = new Position();
+    public Position currentPosition = new Position(-1,-1);
     
     // Position after assigning to layer in drawing
     public Position layeredPostition = new Position(-1,-1);

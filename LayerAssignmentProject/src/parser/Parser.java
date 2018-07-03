@@ -107,7 +107,7 @@ public class Parser
 			System.out.println("Current Node " + nodes.get(i));
 
 //        	Testen ueberhaupt Kanten zu diesem Knoten(nodes.get(i) existieren.
-//        	System.out.println("TEST0");
+//        	System.out.println("SCHEIS");
         	if(currentEdges != null)
         	{
         		System.out.println("Edges are not null");
@@ -122,20 +122,26 @@ public class Parser
         		
             		do
             		{      
-            			currNode = elkNodes.next();
+            			try {
+            				currNode = elkNodes.next();
+            			} catch (Exception e)
+            			{
+            				System.out.println("BOESE");
+            				elkNodes = parentNode.getChildren().iterator();
+            	            currNode = elkNodes.next();
+            			}
+            			
             			System.out.println("Current Edge " + currentEdges.get(j) );
             			System.out.println("Current Text " + currNode.getLabels().get(0).getText());
             			
-//            			Wenn die current elkNode den gleichen Namen wie einer der Nodes in der Adjazenzliste, ex. eine Kante zwischen ihnen
+//            			Wenn die current elkNode den gleichens Namen wie einer der Nodes in der Adjazenzliste, ex. eine Kante zwischen ihnen
             			if(currNode.getLabels().get(0).getText().equals(currentEdges.get(j)))
             			{
-            			    System.out.println("SPRICH MTI MIR");
+            			    System.out.println("Kannte hinzugefuegt");
             				newEdge.getTargets().add(currNode);
             			}
-//            			Naechsten Node checken
-            			
-            		} while(elkNodes.hasNext());
-            		
+//            			Naechsten Node checken     			
+            		} while(elkNodes.hasNext());	
             	}
         	}
         	
@@ -144,8 +150,9 @@ public class Parser
 //        Graphen der gelayered werden soll returnen
         for(ElkEdge edge : parentNode.getContainedEdges())
         {
-        	System.out.println(edge.getSources().get(0).getLabels().get(0).getText());
+        	System.out.println("SORUCes:" + edge.getSources().get(0).getLabels().get(0).getText());
         }
+        
 		return parentNode;
 		
 	}

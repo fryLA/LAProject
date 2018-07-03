@@ -45,9 +45,9 @@ public class GraphDrawer extends JPanel {
         this.currNodes = nodes;
         this.currEdges = edges;
         this.layerCnt = layerCnt;
-
+        
         this.nodesInLayer = nodesInLayer;
-
+        
         newlyAssignedNodes = new ArrayList<Node>();
         edgesToBeRemovedfromMiniGraph = new ArrayList<Edge>();
 
@@ -64,12 +64,7 @@ public class GraphDrawer extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // This is defined in the LayerAssignemnt class, where random coordinates are assigned.
-        double widthOfMiniGraph = 100;
-        double heightOfMiniGraph = 100;
-
-        double minigraphXMultiplier = (this.getWidth() - 2 * Node.DEFAULT_NODE_WIDTH) / widthOfMiniGraph;
-        double miniGraphYMultiplier = ((this.getHeight() - 2 * Node.DEFAULT_NODE_HEIGHT) / 3) / heightOfMiniGraph;
+        
 
         layerWidth = (this.getWidth() - 2 * PADDING) / currNodes.size();
         layerHeight = (this.getHeight() / 3) * 2 - 2 * PADDING;
@@ -87,9 +82,23 @@ public class GraphDrawer extends JPanel {
             g2.draw(rect);
         }
 
+        double widthOfMiniGraph = 100;
+        double heightOfMiniGraph = 100;
+        
+        double minigraphXMultiplier = (this.getWidth() - 2 * Node.DEFAULT_NODE_WIDTH) / widthOfMiniGraph;
+        double miniGraphYMultiplier = ((this.getHeight() - 2 * Node.DEFAULT_NODE_HEIGHT) / 3) / heightOfMiniGraph;
         // NODES
         for (Node node : currNodes) {
 //            node.refreshScaledPosition(minigraphXMultiplier, miniGraphYMultiplier);
+            
+                // This is defined in the LayerAssignemnt class, where random coordinates are assigned.
+                   
+                   node.refreshScaledPosition(minigraphXMultiplier, miniGraphYMultiplier);
+                   if (node.currentPosition.x < 0 || node.currentPosition.y < 0 ) {
+                       
+                       node.currentPosition.x = node.scaledPosition.x;
+                       node.currentPosition.y = node.scaledPosition.y;
+                   }
 
 //            if (node.layer >= 0) {
 
@@ -163,6 +172,9 @@ public class GraphDrawer extends JPanel {
             Node newNode = nodes.get(i);
             if (oldNode.getLayer() != newNode.getLayer()) {
                 newlyAssignedNodes.add(newNode);
+            } else if (newNode.layer >= 0) {
+                newNode.currentPosition.x = oldNode.layeredPostition.x;
+                newNode.currentPosition.y = oldNode.layeredPostition.y;
             }
         }
 
@@ -211,7 +223,8 @@ public class GraphDrawer extends JPanel {
                     double nextDist = Math.sqrt(nextDX * nextDX + nextDY * nextDY);
 
                     if (nextDist <= acc) {
-                        node.currentPosition = node.layeredPostition;
+                        node.currentPosition.x = node.layeredPostition.x;
+                        node.currentPosition.y = node.layeredPostition.y;
                         System.out.println(d);
                         System.out.println(nextDist);
                         gd.repaint();

@@ -20,49 +20,49 @@ public class Edge {
         this.isDummy = isDummy;
     }
     
-    public Position getStartPostition(boolean inLayer) {
+    public Position getStartPostition() {
         Position pos = new Position();
         
-        if (!inLayer) {
-            
-            if (startNode.scaledPosition.x < endNode.scaledPosition.x) {
-                pos.x = startNode.scaledPosition.x + Node.DEFAULT_NODE_WIDTH;
+//        if (!inLayer) {
+//            
+            if (startNode.currentPosition.x < endNode.currentPosition.x) {
+                pos.x = startNode.currentPosition.x + Node.DEFAULT_NODE_WIDTH;
             } else {
-                pos.x = startNode.scaledPosition.x;
+                pos.x = startNode.currentPosition.x;
             }
             
-            if (startNode.scaledPosition.y < endNode.scaledPosition.y) {
-                pos.y = startNode.scaledPosition.y + Node.DEFAULT_NODE_HEIGHT;
+            if (startNode.currentPosition.y < endNode.currentPosition.y) {
+                pos.y = startNode.currentPosition.y + Node.DEFAULT_NODE_HEIGHT;
             } else {
-                pos.y = startNode.scaledPosition.y;
+                pos.y = startNode.currentPosition.y;
             }
-        } else {
-            pos.x = startNode.layeredPostition.x + Node.DEFAULT_NODE_WIDTH;
-            pos.y = startNode.layeredPostition.y + Node.DEFAULT_NODE_HEIGHT / 2;
-        }
+//        } else {
+//            pos.x = startNode.layeredPostition.x + Node.DEFAULT_NODE_WIDTH;
+//            pos.y = startNode.layeredPostition.y + Node.DEFAULT_NODE_HEIGHT / 2;
+//        }
         
         return pos;
     }
     
-    public Position getEndPostition(boolean inLayer) {
+    public Position getEndPostition() {
         Position pos = new Position();
         
-        if (!inLayer) {
-            if (startNode.getPosition().x < endNode.getPosition().x) {
-                pos.x = endNode.scaledPosition.x;
+//        if (!inLayer) {
+            if (startNode.currentPosition.x < endNode.currentPosition.x) {
+                pos.x = endNode.currentPosition.x;
             } else {
-                pos.x = endNode.scaledPosition.x + Node.DEFAULT_NODE_WIDTH;
+                pos.x = endNode.currentPosition.x + Node.DEFAULT_NODE_WIDTH;
             }
             
-            if (startNode.getPosition().y < endNode.getPosition().y) {
-                pos.y = endNode.scaledPosition.y;
+            if (startNode.currentPosition.y < endNode.currentPosition.y) {
+                pos.y = endNode.currentPosition.y;
             } else {
-                pos.y = endNode.scaledPosition.y + Node.DEFAULT_NODE_HEIGHT;
+                pos.y = endNode.currentPosition.y + Node.DEFAULT_NODE_HEIGHT;
             }
-        } else {
-            pos.x = endNode.layeredPostition.x;
-            pos.y = endNode.layeredPostition.y + Node.DEFAULT_NODE_HEIGHT / 2;
-        }
+//        } else {
+//            pos.x = endNode.layeredPostition.x;
+//            pos.y = endNode.layeredPostition.y + Node.DEFAULT_NODE_HEIGHT / 2;
+//        }
         
         return pos;
     }
