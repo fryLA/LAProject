@@ -121,13 +121,13 @@ public class LayerAssignmentVisualizer implements ActionListener {
         List<Node> nodes = initialDrawing.getNodes();
         List<Edge> edges = initialDrawing.getEdges();
         
-        HashMap<Integer, Integer> nodesInLayer = new HashMap<>();
         
+        // Remember how may nodes are stored in specified layer - need this for drawing.
+        HashMap<Integer, Integer> nodesInLayer = new HashMap<>();
         MyGraph finalGraph = graphs.get(graphs.size() -1);
         
         for (Node node : finalGraph.getNodes()) {
             int layer = node.getLayer();
-            
             if (nodesInLayer.containsKey(layer)) {
                 int currNodesInLayer = nodesInLayer.get(layer);
                 nodesInLayer.replace(layer, currNodesInLayer + 1);
@@ -138,13 +138,12 @@ public class LayerAssignmentVisualizer implements ActionListener {
         
 
         gd = new GraphDrawer(nodes, edges, layerCnt, nodesInLayer);
+        
+        
         Border blackline = BorderFactory.createLineBorder(Color.black);
         gd.setBorder(blackline);
-
         layerPanel.add(gd);
-
         frame.setVisible(true);
-
     }
 
     private void addPanels(JFrame dialog) {

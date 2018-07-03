@@ -130,6 +130,7 @@ public class LayerAssignment {
             node.layer = elkNode.getProperty(LAYER);
             node.isDummy = elkNode.getProperty(IS_DUMMY);
             node.posInlayer = elkNode.getProperty(POSITION_IN_LAYER);
+            System.out.println("SET POS IN LAYER" + node.posInlayer);
 
             nodes.add(node);
         }

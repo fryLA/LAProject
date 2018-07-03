@@ -1,7 +1,11 @@
 node n1
 node n2
 node n3
-
+node n4
+node n5
 
 edge n1 n3
 edge n2 n3
+edge n1 n4
+edge n2 n4
+edge n1 n5

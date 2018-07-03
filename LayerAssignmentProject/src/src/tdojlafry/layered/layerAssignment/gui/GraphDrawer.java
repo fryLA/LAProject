@@ -158,6 +158,8 @@ public class GraphDrawer extends JPanel {
         double d = (layerRect.getHeight() - (2 * PADDING)) / (nodesInLayer.get(node.layer));
         
         node.layeredPostition.y = layerRect.getMinY() + PADDING + (node.posInlayer * d);
+        System.out.println(node.posInlayer);
+        System.out.println("LAYERED POS: " + node.layeredPostition.x + " : " + node.layeredPostition.y);
     }
 
     protected void update(MyGraph newGraph) {
