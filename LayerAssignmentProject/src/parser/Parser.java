@@ -155,7 +155,7 @@ public class Parser
         
         for(ElkNode node : parentNode.getChildren())
         {
-        	List<ElkEdge> edges = node.getContainedEdges();
+        	List<ElkEdge> edges = parentNode.getContainedEdges();
 //        	for(int i = 0; i < edges.size() )
         	System.out.println("Node:" + node.getLabels().get(0).getText());
         	System.out.println("Size:" + edges.size());
