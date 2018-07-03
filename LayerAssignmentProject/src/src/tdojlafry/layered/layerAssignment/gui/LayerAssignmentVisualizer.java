@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -71,7 +72,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
     private boolean initial = true; // enabled: play, fwd, bck. disabled: pause, reset.
     private boolean paused = false; // enabled: play, fwd, bck, reset. disabled: pause.
     private boolean active = false; // enabled: pause. disabled: play, fwd, bck, reset.
-
+    
     private List<MyGraph> graphs;
 
     protected LayerAssignmentVisualizer(List<MyGraph> graphs) {
@@ -104,8 +105,8 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
         addPanels(frame);
 
-        // frame.pack();
-        frame.setVisible(true);
+//         frame.pack();
+//        frame.setVisible(true);
     }
 
     public void update() {
@@ -119,11 +120,24 @@ public class LayerAssignmentVisualizer implements ActionListener {
         // Add not layouted Graph
         List<Node> nodes = initialDrawing.getNodes();
         List<Edge> edges = initialDrawing.getEdges();
+        
+        HashMap<Integer, Integer> nodesInLayer = new HashMap<>();
+        
+        MyGraph finalGraph = graphs.get(graphs.size() -1);
+        
+        for (Node node : finalGraph.getNodes()) {
+            int layer = node.getLayer();
+            
+            if (nodesInLayer.containsKey(layer)) {
+                int currNodesInLayer = nodesInLayer.get(layer);
+                nodesInLayer.replace(layer, currNodesInLayer + 1);
+            } else {
+                nodesInLayer.put(layer, 1);
+            }
+        }
+        
 
-        double width = 5.0;
-        double height = 5.0;
-
-        gd = new GraphDrawer(nodes, edges, width, height, layerCnt);
+        gd = new GraphDrawer(nodes, edges, layerCnt, nodesInLayer);
         Border blackline = BorderFactory.createLineBorder(Color.black);
         gd.setBorder(blackline);
 
@@ -248,18 +262,40 @@ public class LayerAssignmentVisualizer implements ActionListener {
         case PLAY:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), false);
             enableComponents(Arrays.asList(pauseButton), true);
+            
+            paused = false;
+            
+            for (int i = currentStep; i < graphs.size(); i++) {
+                currentStep = i;
+                if (paused) {
+                    break;
+                }
+                
+                gd.update(graphs.get(i));
+            }
+            
             break;
         case PAUSE:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
+            
+            paused = true;
             break;
         case RESET:
             enableComponents(Arrays.asList(playButton, jumpFwd, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton, resetButton, jumpBck), false);
+            
+            MyGraph initialDrawing = graphs.get(0);
+
+            List<Node> nodes = initialDrawing.getNodes();
+            List<Edge> edges = initialDrawing.getEdges();
+
+            gd.reset(nodes, edges, layerCnt);
             break;
         case FWD:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
+            
             if (currentStep + stepSize <= layerCnt) {
                 currentStep += stepSize;
             } else {
