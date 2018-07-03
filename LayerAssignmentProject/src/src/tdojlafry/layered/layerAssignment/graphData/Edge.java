@@ -25,16 +25,16 @@ public class Edge {
         
         if (!inLayer) {
             
-            if (startNode.getGetScaledPosition().x < endNode.getGetScaledPosition().x) {
-                pos.x = startNode.getGetScaledPosition().x + Node.DEFAULT_NODE_WIDTH;
+            if (startNode.scaledPosition.x < endNode.scaledPosition.x) {
+                pos.x = startNode.scaledPosition.x + Node.DEFAULT_NODE_WIDTH;
             } else {
-                pos.x = startNode.getGetScaledPosition().x;
+                pos.x = startNode.scaledPosition.x;
             }
             
-            if (startNode.getGetScaledPosition().y < endNode.getGetScaledPosition().y) {
-                pos.y = startNode.getGetScaledPosition().y + Node.DEFAULT_NODE_HEIGHT;
+            if (startNode.scaledPosition.y < endNode.scaledPosition.y) {
+                pos.y = startNode.scaledPosition.y + Node.DEFAULT_NODE_HEIGHT;
             } else {
-                pos.y = startNode.getGetScaledPosition().y;
+                pos.y = startNode.scaledPosition.y;
             }
         } else {
             pos.x = startNode.layeredPostition.x + Node.DEFAULT_NODE_WIDTH;
@@ -49,15 +49,15 @@ public class Edge {
         
         if (!inLayer) {
             if (startNode.getPosition().x < endNode.getPosition().x) {
-                pos.x = endNode.getGetScaledPosition().x;
+                pos.x = endNode.scaledPosition.x;
             } else {
-                pos.x = endNode.getGetScaledPosition().x + Node.DEFAULT_NODE_WIDTH;
+                pos.x = endNode.scaledPosition.x + Node.DEFAULT_NODE_WIDTH;
             }
             
             if (startNode.getPosition().y < endNode.getPosition().y) {
-                pos.y = endNode.getGetScaledPosition().y;
+                pos.y = endNode.scaledPosition.y;
             } else {
-                pos.y = endNode.getGetScaledPosition().y + Node.DEFAULT_NODE_HEIGHT;
+                pos.y = endNode.scaledPosition.y + Node.DEFAULT_NODE_HEIGHT;
             }
         } else {
             pos.x = endNode.layeredPostition.x;

@@ -5,12 +5,15 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
 import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
@@ -35,20 +38,19 @@ public class GraphDrawer extends JPanel {
     double layerHeight;
 
     private int layerCnt;
-    
+    private HashMap<Integer, Rectangle2D> layers = new HashMap<>();
     private HashMap<Integer, Integer> nodesInLayer;
-    
+
     protected GraphDrawer(List<Node> nodes, List<Edge> edges, int layerCnt, HashMap<Integer, Integer> nodesInLayer) {
         this.currNodes = nodes;
         this.currEdges = edges;
         this.layerCnt = layerCnt;
-        
+
         this.nodesInLayer = nodesInLayer;
 
         newlyAssignedNodes = new ArrayList<Node>();
         edgesToBeRemovedfromMiniGraph = new ArrayList<Edge>();
-        
-        
+
     }
 
     @Override
@@ -65,68 +67,57 @@ public class GraphDrawer extends JPanel {
         // This is defined in the LayerAssignemnt class, where random coordinates are assigned.
         double widthOfMiniGraph = 100;
         double heightOfMiniGraph = 100;
-        
-        double minigraphXMultiplier = (this.getWidth() - 2* Node.DEFAULT_NODE_WIDTH) / widthOfMiniGraph;
-        double miniGraphYMultiplier = ((this.getHeight() - 2*Node.DEFAULT_NODE_HEIGHT) / 3) / heightOfMiniGraph;
+
+        double minigraphXMultiplier = (this.getWidth() - 2 * Node.DEFAULT_NODE_WIDTH) / widthOfMiniGraph;
+        double miniGraphYMultiplier = ((this.getHeight() - 2 * Node.DEFAULT_NODE_HEIGHT) / 3) / heightOfMiniGraph;
 
         layerWidth = (this.getWidth() - 2 * PADDING) / currNodes.size();
-        layerHeight = (this.getHeight() / 3)*2 - 2 * PADDING;
+        layerHeight = (this.getHeight() / 3) * 2 - 2 * PADDING;
 
         // LAYER
         int startPos = ((this.getHeight() - Node.DEFAULT_NODE_HEIGHT) / 3) + PADDING;
-        
-        HashMap<Integer, Rectangle2D> layers = new HashMap<>();
-        
+
+        layers.clear();
         for (int i = 0; i < layerCnt; i++) {
-            
-//            ShapeProvider.createLayer(g1, e);
-            
-            Rectangle2D rect = new Rectangle2D.Double(PADDING + i * layerWidth, startPos, layerWidth,
-                    layerHeight);
-            
+
+            Rectangle2D rect = new Rectangle2D.Double(PADDING + i * layerWidth, startPos, layerWidth, layerHeight);
+
             layers.put(i, rect);
             g2.setColor(Color.BLUE);
             g2.draw(rect);
         }
-        
-        
 
         // NODES
         for (Node node : currNodes) {
-            node.refreshScaledPosition(minigraphXMultiplier, miniGraphYMultiplier);
-            
-            if (node.layer >= 0) {
-                
-                refreshNodeInLayerPosition(node, layers);
-                
-                if (newlyAssignedNodes.contains(node)) {
-                    g2.setColor(Color.RED);
-//                    moveNode(node);
-                    Rectangle2D rect =
-                            new Rectangle2D.Double(node.layeredPostition.x, 
-                                    node.layeredPostition.y, Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
-                    g2.fill(rect);
-                    g2.draw(rect);
-                } else {
-                    g2.setColor(Color.BLUE);
-                    
-                    Rectangle2D rect =
-                            new Rectangle2D.Double(node.layeredPostition.x, 
-                                    node.layeredPostition.y, Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
-                    g2.fill(rect);
-                    g2.draw(rect);
-                }
-            } else {
-                g2.setColor(Color.BLUE);
-                Rectangle2D rect =
-                        new Rectangle2D.Double(node.getGetScaledPosition().x, 
-                                node.getGetScaledPosition().y, Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
-                g2.fill(rect);
-                g2.draw(rect);
+//            node.refreshScaledPosition(minigraphXMultiplier, miniGraphYMultiplier);
 
-            }
+//            if (node.layer >= 0) {
+
+//                if (newlyAssignedNodes.contains(node)) {
+                    g2.setColor(Color.RED);
+
+                    Rectangle2D rect = new Rectangle2D.Double(node.currentPosition.x, node.currentPosition.y,
+                            Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
+                    g2.fill(rect);
+                    g2.draw(rect);
+//                } else {
+//                    g2.setColor(Color.BLUE);
+//
+//                    Rectangle2D rect = new Rectangle2D.Double(node.layeredPostition.x, node.layeredPostition.y,
+//                            Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
+//                    g2.fill(rect);
+//                    g2.draw(rect);
+//                }
+//            } else {
+//                g2.setColor(Color.BLUE);
+//                Rectangle2D rect = new Rectangle2D.Double(node.scaledPosition.x, node.scaledPosition.y,
+//                        Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
+//                g2.fill(rect);
+//                g2.draw(rect);
+//
+//            }
         }
-        
+
         // EDGES
         for (Edge edge : currEdges) {
             g.setColor(Color.RED);
@@ -145,18 +136,16 @@ public class GraphDrawer extends JPanel {
         // double destX = PADDING + (layerWidth / 2)+ node.getLayer() * layerWidth;
         // double destY = heightOfMiniGraph + node.getPosInlayer() * (PADDING + nodeHeight);
 
-        
-
     }
-    
-    private void refreshNodeInLayerPosition(Node node, HashMap<Integer, Rectangle2D> layers) {
-        
+
+    private void refreshNodeInLayerPosition(Node node) {
+
         Rectangle2D layerRect = layers.get(node.layer);
-        
+
         node.layeredPostition.x = layerRect.getCenterX() - (Node.DEFAULT_NODE_WIDTH / 2);
-        
-        double d = (layerRect.getHeight() - (2 * PADDING)) / (nodesInLayer.get(node.layer));
-        
+
+        double d = (layerRect.getHeight() - (2 * PADDING)) / (nodesInLayer.get(node.layer) + 1);
+
         node.layeredPostition.y = layerRect.getMinY() + PADDING + (node.posInlayer * d);
         System.out.println(node.posInlayer);
         System.out.println("LAYERED POS: " + node.layeredPostition.x + " : " + node.layeredPostition.y);
@@ -176,7 +165,7 @@ public class GraphDrawer extends JPanel {
                 newlyAssignedNodes.add(newNode);
             }
         }
-        
+
         for (Edge edge : edges) {
             if (newlyAssignedNodes.contains(edge.startNode)) {
                 edgesToBeRemovedfromMiniGraph.add(edge);
@@ -186,27 +175,83 @@ public class GraphDrawer extends JPanel {
         this.currNodes = nodes;
         this.currEdges = edges;
 
-        this.repaint();
+        // This is defined in the LayerAssignemnt class, where random coordinates are assigned.
+        double widthOfMiniGraph = 100;
+        double heightOfMiniGraph = 100;
+
+        double minigraphXMultiplier = (this.getWidth() - 2 * Node.DEFAULT_NODE_WIDTH) / widthOfMiniGraph;
+        double miniGraphYMultiplier = ((this.getHeight() - 2 * Node.DEFAULT_NODE_HEIGHT) / 3) / heightOfMiniGraph;
+
+        for (Node node : newlyAssignedNodes) {
+            node.refreshScaledPosition(minigraphXMultiplier, miniGraphYMultiplier);
+            node.currentPosition.x = node.scaledPosition.x;
+            node.currentPosition.y = node.scaledPosition.y;
+
+            refreshNodeInLayerPosition(node);
+            double dx = node.layeredPostition.x - node.scaledPosition.x;
+            double dy = node.layeredPostition.y - node.scaledPosition.y;
+
+            double angle = Math.atan2(dy, dx);
+
+            double d = Math.sqrt(dx * dx + dy * dy);
+            double acc = d / 50;
+            GraphDrawer gd = this;
+
+            Timer t = new Timer(10, new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    node.currentPosition.x += acc * Math.cos(angle);
+                    node.currentPosition.y += acc * Math.sin(angle);
+                    gd.repaint();
+
+                    double nextDX = node.layeredPostition.x - (node.currentPosition.x + acc * Math.cos(angle));
+                    double nextDY = node.layeredPostition.y - (node.currentPosition.y + acc * Math.sin(angle));
+                    double nextDist = Math.sqrt(nextDX * nextDX + nextDY * nextDY);
+
+                    if (nextDist <= acc) {
+                        node.currentPosition = node.layeredPostition;
+                        System.out.println(d);
+                        System.out.println(nextDist);
+                        gd.repaint();
+                        try {
+                            ((Timer) e.getSource()).stop();
+                        } catch (Throwable e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+                    }
+
+                }
+            });
+
+            t.start();
+            // t.stop();
+            // t.stop();
+
+        }
+
+        // this.repaint();
     }
 
     public void reset(List<Node> nodes, List<Edge> edges, int layerCnt) {
-        
+
         for (Node node : nodes) {
             node.xOffset = 0;
             node.yOffset = 0;
             node.layeredPostition.x = -1;
             node.layeredPostition.y = -1;
         }
-        
+
         this.currNodes = nodes;
         this.currEdges = edges;
         this.layerCnt = layerCnt;
-        
+
         this.repaint();
-        
+
     }
-    
-    
-// 
+
+    //
 
 }

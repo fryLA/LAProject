@@ -33,24 +33,4 @@ class ShapeProvider {
                 new int[] { 0, -ARROW_SIZE, ARROW_SIZE, 0 }, 4);
     }
 
-    protected static void drawLayer(Graphics g1, Edge e) {
-
-        Graphics2D g = (Graphics2D) g1.create();
-    }
-
-    protected static void drawNode(Graphics g1, Node node) {
-        
-        Graphics2D g = (Graphics2D) g1.create();
-        
-        Rectangle2D rect =
-                new Rectangle2D.Double(node.getGetScaledPosition().x, 
-                        node.getGetScaledPosition().y, Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
-//        if (newlyAssignedNodes.contains(node)) {
-//            g2.setColor(Color.RED);
-//        } else {
-            g.setColor(Color.BLUE);
-//        }
-        g.fill(rect);
-        g.draw(rect);
-    }
 }

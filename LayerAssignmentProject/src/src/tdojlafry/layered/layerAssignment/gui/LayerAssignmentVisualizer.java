@@ -283,7 +283,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
         case RESET:
             enableComponents(Arrays.asList(playButton, jumpFwd, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton, resetButton, jumpBck), false);
-            
+            currentStep = 0;
             MyGraph initialDrawing = graphs.get(0);
 
             List<Node> nodes = initialDrawing.getNodes();
@@ -305,12 +305,8 @@ public class LayerAssignmentVisualizer implements ActionListener {
         case BCK:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
-            if (currentStep - stepSize >= 0) {
-                currentStep -= stepSize;
-            } else {
-                currentStep = 0;
-            }
-            gd.update(graphs.get(currentStep - stepSize));
+            gd.update(graphs.get(Math.max(currentStep - stepSize, 0)));
+            currentStep = Math.max(currentStep - stepSize, 0);
             break;
         }
 

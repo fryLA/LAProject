@@ -13,6 +13,8 @@ public class Node {
     // Minimap position based on windows size
     public Position scaledPosition = new Position();
     
+    public Position currentPosition = new Position();
+    
     // Position after assigning to layer in drawing
     public Position layeredPostition = new Position(-1,-1);
     
@@ -65,9 +67,6 @@ public class Node {
         this.isDummy = isDummy;
     }
 
-    public Position getGetScaledPosition() {
-        return scaledPosition;
-    }
     
     public void refreshScaledPosition(double xMod, double yMod) {
         scaledPosition.x = position.x * xMod + xOffset;

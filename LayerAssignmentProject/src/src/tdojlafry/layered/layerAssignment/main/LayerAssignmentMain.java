@@ -18,7 +18,8 @@ public class LayerAssignmentMain {
         try {
             
             // USE THIS FOR TESTING (only one of the following two lines at a time)
-        ElkNode testGraph = GuiTestDataCreator.createPyramid();//createSimpleLayoutGraph(10); // ignores parsing
+//        ElkNode testGraph = GuiTestDataCreator.createPyramid();// // ignores parsing
+        ElkNode testGraph = GuiTestDataCreator.createSimpleLayoutGraph(10);
 //            ElkNode testGraph = Parser.parse("testGraphs/testfile.txt"); // does not ignore parsing
         
         LayerAssignment la = new LayerAssignment();
