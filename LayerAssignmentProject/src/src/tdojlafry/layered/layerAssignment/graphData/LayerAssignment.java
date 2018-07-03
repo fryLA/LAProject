@@ -55,7 +55,9 @@ public class LayerAssignment {
 
             // alle oben gefundenen Knoten n werden in das l-te Layer getan und werden fuer die weitere
             // Berrechnung geloescht, so wie alle ausgehenden Kanten von n geloescht werden
-            for (ElkNode n : toBeRemoved) {
+            for (int i = 0; i < toBeRemoved.size(); i++) {
+                ElkNode n = toBeRemoved.get(i);
+                n.setProperty(POSITION_IN_LAYER, i);
                 n.setProperty(LAYER, l);
                 nodes.remove(n);
                 List<ElkEdge> outgoingEdges = new ArrayList<>(getOutgoingEdges(edges, n));
