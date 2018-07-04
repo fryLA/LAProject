@@ -95,11 +95,13 @@ public class Parser
 //        	System.out.println("RRR" + currNode2.getLabels().get(0).getText());
 //		}   while(elkNodes2.hasNext());
         
-        
-        for (int i = 0; i < nodes.size(); i++) 
+//        IST DIE FOR LOOP UNNOETIG WTF
+
+        for (int i = 0; i < parentNode.getChildren().size(); i++) 
         {
 //        	Iteator um über alle ElkNodes zu iterieren
         	Iterator<ElkNode> elkNodes = parentNode.getChildren().iterator();
+
             ElkNode currNode = elkNodes.next();
 //          Speichere edges die zur jetzigen Node gehören
         	List<String> currentEdges = edges.get(nodes.get(i));
@@ -117,7 +119,15 @@ public class Parser
 //        			Kante erzeugen
             		ElkEdge newEdge = ElkGraphUtil.createEdge(parentNode);
 //            		Start der Kante initialiseren
-        			newEdge.getSources().add(currNode);
+            		for(ElkNode child : parentNode.getChildren())
+            		{
+            			if(child.getLabels().get(0).getText().equals(nodes.get(i)))
+            			{
+                    		System.out.println("Currentt !!!! source" + child.getLabels().get(0).getText());
+            				newEdge.getSources().add(child);
+            			}
+            		}
+        		
 //        			Ueber alle elkNodes iterieren
         		
             		do
@@ -140,11 +150,12 @@ public class Parser
             			    System.out.println("Kannte hinzugefuegt");
             				newEdge.getTargets().add(currNode);
             			}
-//            			Naechsten Node checken     			
-            		} while(elkNodes.hasNext());	
+//            			Naechsten Node checken    
+
+            		} while(elkNodes.hasNext());
             	}
         	}
-        	
+   		 
         }
 
 //        Graphen der gelayered werden soll returnen
@@ -156,13 +167,13 @@ public class Parser
         for(ElkNode node : parentNode.getChildren())
         {
         	List<ElkEdge> edges = parentNode.getContainedEdges();
-//        	for(int i = 0; i < edges.size() )
         	System.out.println("Node:" + node.getLabels().get(0).getText());
-        	System.out.println("Size:" + edges.size());
+        	
         }
         
         
-        
+    	System.out.println("DWADWADSD");
+
 		return parentNode;
 		
 	}
