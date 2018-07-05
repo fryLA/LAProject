@@ -7,7 +7,7 @@ import org.eclipse.elk.graph.ElkNode;
 import parser.Parser;
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
 import src.tdojlafry.layered.layerAssignment.graphData.LayerAssignment;
-import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
+import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 import src.tdojlafry.layered.layerAssignment.graphData.Node;
 import src.tdojlafry.layered.layerAssignment.gui.LayerAssignmentView;
 import src.tdojlafry.layered.layerAssignment.testStuff.GuiTestDataCreator;
@@ -23,7 +23,7 @@ public class LayerAssignmentMain {
             ElkNode testGraph = Parser.parse("testGraphs/testfile.txt"); // does not ignore parsing
         
         LayerAssignment la = new LayerAssignment();
-        List<MyGraph> data =  la.assignLayers(testGraph);
+        List<SimpleGraph> data =  la.assignLayers(testGraph);
         
         for (int i = 0; i < data.size(); i ++) {
             

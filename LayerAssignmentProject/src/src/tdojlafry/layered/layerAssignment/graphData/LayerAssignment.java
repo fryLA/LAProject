@@ -23,7 +23,7 @@ public class LayerAssignment {
      * @param layoutGraph
      * @return Eine Veraenderungshistorie des Graphen waehrend des Layerassignments
      */
-    public List<MyGraph> assignLayers(ElkNode elkGraph) {
+    public List<SimpleGraph> assignLayers(ElkNode elkGraph) {
 
         // Defaultproperties werden verteilt
         for (ElkNode n : elkGraph.getChildren()) {
@@ -35,8 +35,8 @@ public class LayerAssignment {
             e.setProperty(IS_DUMMY, false);
         }
 
-        MyGraph layoutGraph = elkGraphToMyGraph(elkGraph);
-        List<MyGraph> Verlauf = new ArrayList<MyGraph>();
+        SimpleGraph layoutGraph = elkGraphToMyGraph(elkGraph);
+        List<SimpleGraph> Verlauf = new ArrayList<SimpleGraph>();
         Verlauf.add(layoutGraph);
 
         List<ElkNode> nodes = new ArrayList<>(elkGraph.getChildren());
@@ -102,8 +102,10 @@ public class LayerAssignment {
                     
                     dummyEdge = ElkGraphUtil.createEdge(elkGraph);
                     dummyEdge.setProperty(IS_DUMMY, true);
-                    dummyEdge.getSources().set(0, lastDummy);
-                    dummyEdge.getTargets().set(0, dummy);
+                    dummyEdge.getSources().clear();
+                    dummyEdge.getSources().add(lastDummy);
+                    dummyEdge.getTargets().clear();
+                    dummyEdge.getTargets().add(0, dummy);
                     
                     lastDummy = dummy;
                 }else {
@@ -121,7 +123,7 @@ public class LayerAssignment {
         return Verlauf;
     }
 
-    public MyGraph elkGraphToMyGraph(ElkNode elkGraph) {
+    public SimpleGraph elkGraphToMyGraph(ElkNode elkGraph) {
 
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
@@ -164,7 +166,7 @@ public class LayerAssignment {
             edges.add(edge);
         }
         
-        MyGraph graph = new MyGraph(nodes, edges);
+        SimpleGraph graph = new SimpleGraph(nodes, edges);
         graph.isDummyNodeGraph = dummyNodesPresent;
 
         return graph;

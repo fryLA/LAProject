@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
-import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
+import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 import src.tdojlafry.layered.layerAssignment.graphData.Node;
 import src.tdojlafry.layered.layerAssignment.graphData.Position;
 
@@ -150,7 +150,7 @@ public class GraphDrawer extends JPanel implements ActionListener{
 //        System.out.println("LAYERED POS: " + node.layeredPostition.x + " : " + node.layeredPostition.y);
 //    }
 
-    protected void update(MyGraph newGraph) {
+    protected void update(SimpleGraph newGraph) {
         List<Node> nodes = newGraph.getNodes();
         List<Edge> edges = newGraph.getEdges();
         

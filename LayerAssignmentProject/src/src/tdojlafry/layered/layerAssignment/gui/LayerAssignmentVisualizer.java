@@ -30,7 +30,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
-import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
+import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 import src.tdojlafry.layered.layerAssignment.graphData.Node;
 
 public class LayerAssignmentVisualizer implements ActionListener {
@@ -73,9 +73,9 @@ public class LayerAssignmentVisualizer implements ActionListener {
     private boolean paused = false; // enabled: play, fwd, bck, reset. disabled: pause.
     private boolean active = false; // enabled: pause. disabled: play, fwd, bck, reset.
     
-    private List<MyGraph> graphs;
+    private List<SimpleGraph> graphs;
 
-    protected LayerAssignmentVisualizer(List<MyGraph> graphs) {
+    protected LayerAssignmentVisualizer(List<SimpleGraph> graphs) {
 
         layerCnt = computeLayerCount(graphs);
 
@@ -87,9 +87,9 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
     }
 
-    private int computeLayerCount(List<MyGraph> graphs2) {
+    private int computeLayerCount(List<SimpleGraph> graphs2) {
         int cnt = 0;
-       for (MyGraph graph : graphs2) {
+       for (SimpleGraph graph : graphs2) {
            if (!graph.isDummyNodeGraph) {
                cnt++;
            }
@@ -125,7 +125,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
     void initialize() {
 
-        MyGraph initialDrawing = graphs.get(0);
+        SimpleGraph initialDrawing = graphs.get(0);
 
         // Add not layouted Graph
         List<Node> nodes = initialDrawing.getNodes();
@@ -134,7 +134,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
         
         // Remember how may nodes are stored in specified layer - need this for drawing.
         HashMap<Integer, Integer> nodesInLayer = new HashMap<>();
-        MyGraph finalGraph = graphs.get(graphs.size() -1);
+        SimpleGraph finalGraph = graphs.get(graphs.size() -1);
         
         for (Node node : finalGraph.getNodes()) {
             int layer = node.getLayer();
@@ -294,7 +294,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
             enableComponents(Arrays.asList(playButton, jumpFwd, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton, resetButton, jumpBck), false);
             currentStep = 0;
-            MyGraph initialDrawing = graphs.get(0);
+            SimpleGraph initialDrawing = graphs.get(0);
 
             List<Node> nodes = initialDrawing.getNodes();
             List<Edge> edges = initialDrawing.getEdges();

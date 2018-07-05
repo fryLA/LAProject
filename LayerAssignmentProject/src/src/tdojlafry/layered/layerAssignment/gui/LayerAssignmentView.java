@@ -2,13 +2,13 @@ package src.tdojlafry.layered.layerAssignment.gui;
 
 import java.util.List;
 
-import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
+import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 
 public class LayerAssignmentView {
 
-    List<MyGraph> graphs;
+    List<SimpleGraph> graphs;
 
-    public LayerAssignmentView(List<MyGraph> graphs) {
+    public LayerAssignmentView(List<SimpleGraph> graphs) {
         this.graphs = graphs;
     }
 
