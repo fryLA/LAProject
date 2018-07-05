@@ -20,19 +20,21 @@ import src.tdojlafry.layered.layerAssignment.graphData.MyGraph;
 import src.tdojlafry.layered.layerAssignment.graphData.Node;
 import src.tdojlafry.layered.layerAssignment.graphData.Position;
 
-public class GraphDrawer extends JPanel {
+public class GraphDrawer extends JPanel implements ActionListener{
+    
+    public static double MINIGRAPH_AREA_DIVISOR = 3;
 
     /**
      * 
      */
     private static final long serialVersionUID = 8786962247310354215L;
-    private List<Node> currNodes;
+    List<Node> currNodes;
     private List<Edge> currEdges;
 
     private List<Node> newlyAssignedNodes;
     private List<Edge> edgesToBeRemovedfromMiniGraph;
 
-    private static final int PADDING = 20;
+    static final int PADDING = 20;
 
     double layerWidth;
     double layerHeight;
@@ -40,6 +42,11 @@ public class GraphDrawer extends JPanel {
     private int layerCnt;
     private HashMap<Integer, Rectangle2D> layers = new HashMap<>();
     private HashMap<Integer, Integer> nodesInLayer;
+    
+    public GNode gNodes[];
+    private Timer animationTimer;
+    private int actualWidth = 150;
+    private int actualHeight = 150;
 
     protected GraphDrawer(List<Node> nodes, List<Edge> edges, int layerCnt, HashMap<Integer, Integer> nodesInLayer) {
         this.currNodes = nodes;
@@ -50,6 +57,15 @@ public class GraphDrawer extends JPanel {
         
         newlyAssignedNodes = new ArrayList<Node>();
         edgesToBeRemovedfromMiniGraph = new ArrayList<Edge>();
+        
+        gNodes = new GNode[nodes.size()];
+        for (int i = 0; i < nodes.size(); i++) {
+            Node node = nodes.get(i);
+            gNodes[i] = new GNode(node.position.x, node.position.y / MINIGRAPH_AREA_DIVISOR, this, PADDING);
+        }
+        
+        animationTimer = new Timer(10, this);
+//        animationTimer.start();
 
     }
 
@@ -66,7 +82,23 @@ public class GraphDrawer extends JPanel {
 
         
 
-        layerWidth = (this.getWidth() - 2 * PADDING) / currNodes.size();
+        int w = getWidth() - 2 * PADDING;
+        int h = getHeight() - 2 * PADDING;
+        
+        if (w != actualWidth) {
+            for (int i = 0; i < gNodes.length; i++) {
+                gNodes[i].rescaleX(w);
+            }
+            actualWidth = w;
+        }
+        if (h != actualHeight) {
+            for (int i = 0; i < gNodes.length; i++) {
+                gNodes[i].rescaleY(h);
+            }
+            actualHeight = h;
+        }
+
+        layerWidth = (this.getWidth() - 2 * PADDING) / layerCnt;
         layerHeight = (this.getHeight() / 3) * 2 - 2 * PADDING;
 
         // LAYER
@@ -81,188 +113,167 @@ public class GraphDrawer extends JPanel {
             g2.setColor(Color.BLUE);
             g2.draw(rect);
         }
-
-        double widthOfMiniGraph = 100;
-        double heightOfMiniGraph = 100;
         
-        double minigraphXMultiplier = (this.getWidth() - 2 * Node.DEFAULT_NODE_WIDTH) / widthOfMiniGraph;
-        double miniGraphYMultiplier = ((this.getHeight() - 2 * Node.DEFAULT_NODE_HEIGHT) / 3) / heightOfMiniGraph;
-        // NODES
-        for (Node node : currNodes) {
-//            node.refreshScaledPosition(minigraphXMultiplier, miniGraphYMultiplier);
-            
-                // This is defined in the LayerAssignemnt class, where random coordinates are assigned.
-                   
-                   node.refreshScaledPosition(minigraphXMultiplier, miniGraphYMultiplier);
-                   if (node.currentPosition.x < 0 || node.currentPosition.y < 0 ) {
-                       
-                       node.currentPosition.x = node.scaledPosition.x;
-                       node.currentPosition.y = node.scaledPosition.y;
-                   }
-
-//            if (node.layer >= 0) {
-
-//                if (newlyAssignedNodes.contains(node)) {
-                    g2.setColor(Color.RED);
-
-                    Rectangle2D rect = new Rectangle2D.Double(node.currentPosition.x, node.currentPosition.y,
-                            Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
-                    g2.fill(rect);
-                    g2.draw(rect);
-//                } else {
-//                    g2.setColor(Color.BLUE);
-//
-//                    Rectangle2D rect = new Rectangle2D.Double(node.layeredPostition.x, node.layeredPostition.y,
-//                            Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
-//                    g2.fill(rect);
-//                    g2.draw(rect);
-//                }
-//            } else {
-//                g2.setColor(Color.BLUE);
-//                Rectangle2D rect = new Rectangle2D.Double(node.scaledPosition.x, node.scaledPosition.y,
-//                        Node.DEFAULT_NODE_WIDTH, Node.DEFAULT_NODE_HEIGHT);
-//                g2.fill(rect);
-//                g2.draw(rect);
-//
-//            }
-        }
-
+        
         // EDGES
         for (Edge edge : currEdges) {
             g.setColor(Color.RED);
             if (!edgesToBeRemovedfromMiniGraph.contains(edge)) {
                 if (edge.startNode.layer >= 0) {
-                    ShapeProvider.drawArrow(g, edge, true);
+                    ShapeProvider.drawArrow(g, edge, true, this);
                 } else {
-                    ShapeProvider.drawArrow(g, edge, false);
+                    ShapeProvider.drawArrow(g, edge, false, this);
                 }
             }
         }
-
-        // double cussPosX = node.getPosition().x;POSITIONEN ÄNDERN
-        // double currPosY = node.getPosition().y;
-        //
-        // double destX = PADDING + (layerWidth / 2)+ node.getLayer() * layerWidth;
-        // double destY = heightOfMiniGraph + node.getPosInlayer() * (PADDING + nodeHeight);
-
+        
+        g2.setColor(Color.BLUE);
+        for (int i = 0; i < gNodes.length; i++) {
+            GNode node = gNodes[i];
+            Rectangle2D rect = new Rectangle2D.Double(node.currentPosition.x + PADDING, node.currentPosition.y + PADDING, 
+                    GNode.NODE_WIDTH, GNode.NODE_HEIGHT);
+            g2.fill(rect);
+            g2.draw(rect);
+        }
     }
 
-    private void refreshNodeInLayerPosition(Node node) {
-
-        Rectangle2D layerRect = layers.get(node.layer);
-
-        node.layeredPostition.x = layerRect.getCenterX() - (Node.DEFAULT_NODE_WIDTH / 2);
-
-        double d = (layerRect.getHeight() - (2 * PADDING)) / (nodesInLayer.get(node.layer) + 1);
-
-        node.layeredPostition.y = layerRect.getMinY() + PADDING + (node.posInlayer * d);
-        System.out.println(node.posInlayer);
-        System.out.println("LAYERED POS: " + node.layeredPostition.x + " : " + node.layeredPostition.y);
-    }
+//    private void refreshNodeInLayerPosition(Node node) {
+//
+//        Rectangle2D layerRect = layers.get(node.layer);
+//
+//        node.layeredPostition.x = layerRect.getCenterX() - (Node.DEFAULT_NODE_WIDTH / 2);
+//
+//        double d = (layerRect.getHeight() - (2 * PADDING)) / (nodesInLayer.get(node.layer));
+//
+//        node.layeredPostition.y = layerRect.getMinY() + PADDING + (node.posInlayer * (d + 1));
+//        System.out.println(node.posInlayer);
+//        System.out.println("LAYERED POS: " + node.layeredPostition.x + " : " + node.layeredPostition.y);
+//    }
 
     protected void update(MyGraph newGraph) {
         List<Node> nodes = newGraph.getNodes();
         List<Edge> edges = newGraph.getEdges();
-
-        newlyAssignedNodes = new ArrayList<Node>();
-        edgesToBeRemovedfromMiniGraph = new ArrayList<Edge>();
-
-        for (int i = 0; i < nodes.size(); i++) {
-            Node oldNode = currNodes.get(i);
-            Node newNode = nodes.get(i);
-            if (oldNode.getLayer() != newNode.getLayer()) {
-                newlyAssignedNodes.add(newNode);
-            } else if (newNode.layer >= 0) {
-                newNode.currentPosition.x = oldNode.layeredPostition.x;
-                newNode.currentPosition.y = oldNode.layeredPostition.y;
+        
+        for (int i = 0; i < gNodes.length; i++) {
+            GNode gNode = gNodes[i];
+            Node node = newGraph.getNodes().get(i);
+            if (node.layer == -1) {
+                gNode.setTargetPosition(node.position.x, node.position.y / MINIGRAPH_AREA_DIVISOR);
+            } else {
+                Rectangle2D layerRect = layers.get(node.layer);
+                gNode.targetPosition.x = layerRect.getCenterX() - (Node.DEFAULT_NODE_WIDTH / 2) - PADDING;
+                double d = (layerRect.getHeight() - (2 * PADDING)) / (nodesInLayer.get(node.layer) + 1);
+                gNode.targetPosition.y = layerRect.getMinY() + ((node.posInlayer + 1) * d );                
             }
         }
+        animationTimer.start();
 
-        for (Edge edge : edges) {
-            if (newlyAssignedNodes.contains(edge.startNode)) {
-                edgesToBeRemovedfromMiniGraph.add(edge);
-            }
-        }
-
-        this.currNodes = nodes;
-        this.currEdges = edges;
-
-        // This is defined in the LayerAssignemnt class, where random coordinates are assigned.
-        double widthOfMiniGraph = 100;
-        double heightOfMiniGraph = 100;
-
-        double minigraphXMultiplier = (this.getWidth() - 2 * Node.DEFAULT_NODE_WIDTH) / widthOfMiniGraph;
-        double miniGraphYMultiplier = ((this.getHeight() - 2 * Node.DEFAULT_NODE_HEIGHT) / 3) / heightOfMiniGraph;
-
-        for (Node node : newlyAssignedNodes) {
-            node.refreshScaledPosition(minigraphXMultiplier, miniGraphYMultiplier);
-            node.currentPosition.x = node.scaledPosition.x;
-            node.currentPosition.y = node.scaledPosition.y;
-
-            refreshNodeInLayerPosition(node);
-            double dx = node.layeredPostition.x - node.scaledPosition.x;
-            double dy = node.layeredPostition.y - node.scaledPosition.y;
-
-            double angle = Math.atan2(dy, dx);
-
-            double d = Math.sqrt(dx * dx + dy * dy);
-            double acc = d / 50;
-            GraphDrawer gd = this;
-
-            Timer t = new Timer(10, new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                    node.currentPosition.x += acc * Math.cos(angle);
-                    node.currentPosition.y += acc * Math.sin(angle);
-                    gd.repaint();
-
-                    double nextDX = node.layeredPostition.x - (node.currentPosition.x + acc * Math.cos(angle));
-                    double nextDY = node.layeredPostition.y - (node.currentPosition.y + acc * Math.sin(angle));
-                    double nextDist = Math.sqrt(nextDX * nextDX + nextDY * nextDY);
-
-                    if (nextDist <= acc) {
-                        node.currentPosition.x = node.layeredPostition.x;
-                        node.currentPosition.y = node.layeredPostition.y;
-                        System.out.println(d);
-                        System.out.println(nextDist);
-                        gd.repaint();
-                        try {
-                            ((Timer) e.getSource()).stop();
-                        } catch (Throwable e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        }
-                    }
-
-                }
-            });
-
-            t.start();
-            // t.stop();
-            // t.stop();
-
-        }
-
-        // this.repaint();
+//        newlyAssignedNodes = new ArrayList<Node>();
+//        edgesToBeRemovedfromMiniGraph = new ArrayList<Edge>();
+//
+//        for (int i = 0; i < nodes.size(); i++) {
+//            Node oldNode = currNodes.get(i);
+//            Node newNode = nodes.get(i);
+//            if (oldNode.getLayer() != newNode.getLayer()) {
+//                newlyAssignedNodes.add(newNode);
+//            } else if (newNode.layer >= 0) {
+//                newNode.currentPosition.x = oldNode.layeredPostition.x;
+//                newNode.currentPosition.y = oldNode.layeredPostition.y;
+//            }
+//        }
+//
+//        for (Edge edge : edges) {
+//            if (newlyAssignedNodes.contains(edge.startNode)) {
+//                edgesToBeRemovedfromMiniGraph.add(edge);
+//            }
+//        }
+//
+//        this.currNodes = nodes;
+//        this.currEdges = edges;
+//
+//        // This is defined in the LayerAssignemnt class, where random coordinates are assigned.
+//        double widthOfMiniGraph = 100;
+//        double heightOfMiniGraph = 100;
+//
+//        double minigraphXMultiplier = (this.getWidth() - 2 * Node.DEFAULT_NODE_WIDTH) / widthOfMiniGraph;
+//        double miniGraphYMultiplier = ((this.getHeight() - 2 * Node.DEFAULT_NODE_HEIGHT) / 3) / heightOfMiniGraph;
+//
+//        for (Node node : newlyAssignedNodes) {
+//            node.refreshScaledPosition(minigraphXMultiplier, miniGraphYMultiplier);
+//            node.currentPosition.x = node.scaledPosition.x;
+//            node.currentPosition.y = node.scaledPosition.y;
+//
+//            refreshNodeInLayerPosition(node);
+//            double dx = node.layeredPostition.x - node.scaledPosition.x;
+//            double dy = node.layeredPostition.y - node.scaledPosition.y;
+//
+//            double angle = Math.atan2(dy, dx);
+//
+//            double d = Math.sqrt(dx * dx + dy * dy);
+//            double acc = d / 50;
+//            GraphDrawer gd = this;
+//
+//            Timer t = new Timer(10, new ActionListener() {
+//
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//
+//                    node.currentPosition.x += acc * Math.cos(angle);
+//                    node.currentPosition.y += acc * Math.sin(angle);
+//                    gd.repaint();
+//
+//                    double nextDX = node.layeredPostition.x - (node.currentPosition.x + acc * Math.cos(angle));
+//                    double nextDY = node.layeredPostition.y - (node.currentPosition.y + acc * Math.sin(angle));
+//                    double nextDist = Math.sqrt(nextDX * nextDX + nextDY * nextDY);
+//
+//                    if (nextDist <= acc) {
+//                        node.currentPosition.x = node.layeredPostition.x;
+//                        node.currentPosition.y = node.layeredPostition.y;
+//                        System.out.println(d);
+//                        System.out.println(nextDist);
+//                        gd.repaint();
+//                        try {
+//                            ((Timer) e.getSource()).stop();
+//                        } catch (Throwable e1) {
+//                            // TODO Auto-generated catch block
+//                            e1.printStackTrace();
+//                        }
+//                    }
+//
+//                }
+//            });
+//
+//            t.start();
+//            // t.stop();
+//            // t.stop();
+//
+//        }
+//
+//        // this.repaint();
     }
 
     public void reset(List<Node> nodes, List<Edge> edges, int layerCnt) {
 
-        for (Node node : nodes) {
-            node.xOffset = 0;
-            node.yOffset = 0;
-            node.layeredPostition.x = -1;
-            node.layeredPostition.y = -1;
+        for (int i = 0; i < gNodes.length; i++) {
+            GNode gNode = gNodes[i];
+            Node node = nodes.get(i);
+                gNode.setTargetPosition(node.position.x, node.position.y / MINIGRAPH_AREA_DIVISOR);
         }
-
-        this.currNodes = nodes;
-        this.currEdges = edges;
-        this.layerCnt = layerCnt;
-
-        this.repaint();
-
+        animationTimer.start();
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        boolean repaint = false;
+        for (int i = 0; i < gNodes.length; i++) {
+            repaint = gNodes[i].update() || repaint;
+        }
+        
+        if (repaint) {
+            this.repaint();
+        } else {
+            animationTimer.stop();
+        }
     }
 
     //
