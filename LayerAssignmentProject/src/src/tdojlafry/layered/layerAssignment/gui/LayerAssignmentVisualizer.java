@@ -77,7 +77,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
     protected LayerAssignmentVisualizer(List<MyGraph> graphs) {
 
-        layerCnt = graphs.size() - 1;
+        layerCnt = computeLayerCount(graphs);
 
         if (layerCnt == 0) {
             JOptionPane.showMessageDialog(null, "No layers assigned " + layerCnt + ".", "Error Massage",
@@ -85,6 +85,16 @@ public class LayerAssignmentVisualizer implements ActionListener {
         }
         this.graphs = graphs;
 
+    }
+
+    private int computeLayerCount(List<MyGraph> graphs2) {
+        int cnt = 0;
+       for (MyGraph graph : graphs2) {
+           if (!graph.isDummyNodeGraph) {
+               cnt++;
+           }
+       }
+        return cnt - 1;
     }
 
     public void createView(int width, int height) {

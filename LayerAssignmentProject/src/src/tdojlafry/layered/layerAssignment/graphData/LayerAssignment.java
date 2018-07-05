@@ -110,8 +110,10 @@ public class LayerAssignment {
                     //setzte eine neue DummyKante vom letzten Dummyknoten zu target
                     dummyEdge = ElkGraphUtil.createEdge(elkGraph);
                     dummyEdge.setProperty(IS_DUMMY, true);
-                    dummyEdge.getSources().set(0, lastDummy);
-                    dummyEdge.getTargets().set(0, target);
+                    dummyEdge.getSources().clear();
+                    dummyEdge.getSources().add(lastDummy);
+                    dummyEdge.getTargets().clear();
+                    dummyEdge.getTargets().add(0, target);
                 }
                 Verlauf.add(elkGraphToMyGraph(elkGraph));
             }
