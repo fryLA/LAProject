@@ -10,17 +10,6 @@ public class Node {
     
     public boolean isDummy = false;
     
-    // Minimap position based on windows size
-    public Position scaledPosition = new Position();
-    
-    public Position currentPosition = new Position(-1,-1);
-    
-    // Position after assigning to layer in drawing
-    public Position layeredPostition = new Position(-1,-1);
-    
-    public double xOffset = 0;
-    public double yOffset = 0;
-    
     public final static int DEFAULT_NODE_WIDTH = 10;
     public final static int DEFAULT_NODE_HEIGHT = 10;
     
@@ -31,8 +20,6 @@ public class Node {
     public Node(int x, int y) {
         this.getPosition().x = x;
         this.getPosition().y = y;
-        scaledPosition.x = x;
-        scaledPosition.y = y;
     }
 
     public int getLayer() {
@@ -66,10 +53,5 @@ public class Node {
     public void setDummy(boolean isDummy) {
         this.isDummy = isDummy;
     }
-
     
-    public void refreshScaledPosition(double xMod, double yMod) {
-        scaledPosition.x = position.x * xMod + xOffset;
-        scaledPosition.y = position.y * yMod + yOffset;
-    }
 }

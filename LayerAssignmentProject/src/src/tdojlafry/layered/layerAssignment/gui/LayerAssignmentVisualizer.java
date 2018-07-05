@@ -198,6 +198,8 @@ public class LayerAssignmentVisualizer implements ActionListener {
         });
 
         stepSizeText = new JTextField(new Integer(1).toString(), 1);
+        stepSizeText.setMinimumSize(new Dimension(255, 255));
+        stepSizeText.setMaximumSize(new Dimension(2500, 100));
         stepSizeText.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent ke) {
@@ -305,9 +307,11 @@ public class LayerAssignmentVisualizer implements ActionListener {
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
             
-            if (currentStep + stepSize <= layerCnt) {
+            if (currentStep + stepSize < layerCnt) {
                 currentStep += stepSize;
             } else {
+                enableComponents(Arrays.asList(jumpBck,  resetButton, stepSizeText, stepSlider), true);
+                enableComponents(Arrays.asList(playButton, jumpFwd, pauseButton), false);
                 currentStep = layerCnt;
             }
             gd.update(graphs.get(currentStep));
