@@ -5,6 +5,8 @@ import java.util.*;
 public class MyGraph {
     private List<Node> nodes;
     private List<Edge> edges;
+    
+    public boolean isDummyNodeGraph = false;
 
     public MyGraph(List<Node> n, List<Edge> e) {
         setNodes(n);

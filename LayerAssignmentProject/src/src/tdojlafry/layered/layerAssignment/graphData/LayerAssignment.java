@@ -124,6 +124,8 @@ public class LayerAssignment {
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
         Random rand = new Random(218);
+        
+        boolean dummyNodesPresent = false;
 
         // Knoten werden aus dem Elkgraphen in die MyGraph datenstrukture uebertragen und mit zufaelligen koordinaten
         // versehen
@@ -131,6 +133,9 @@ public class LayerAssignment {
             Node node = new Node(rand.nextInt(100) + 1, rand.nextInt(100) + 1);
             node.layer = elkNode.getProperty(LAYER);
             node.isDummy = elkNode.getProperty(IS_DUMMY);
+            if (node.isDummy) {
+                dummyNodesPresent = true;
+            }
             node.posInlayer = elkNode.getProperty(POSITION_IN_LAYER);
             System.out.println("SET POS IN LAYER" + node.posInlayer);
 
@@ -156,8 +161,11 @@ public class LayerAssignment {
 
             edges.add(edge);
         }
+        
+        MyGraph graph = new MyGraph(nodes, edges);
+        graph.isDummyNodeGraph = dummyNodesPresent;
 
-        return new MyGraph(nodes, edges);
+        return graph;
     }
 
     public static List<ElkEdge> getIncommingEdges(List<ElkEdge> edges, ElkNode n) {
