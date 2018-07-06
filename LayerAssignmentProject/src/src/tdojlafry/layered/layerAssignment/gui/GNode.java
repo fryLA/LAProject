@@ -6,8 +6,8 @@ public class GNode {
     public final static double ABSTRACT_WIDTH = 100;
     public final static double ABSTRACT_HEIGHT = 100;
     
-    public final static double NODE_WIDTH = 10;
-    public final static double NODE_HEIGHT = 10;
+    public final static double NODE_WIDTH = 20;
+    public final static double NODE_HEIGHT = 20;
     
     private final static double MOVE_STEPS = 10;
     private final static double MOVE_SNAPIN = 1;
@@ -24,12 +24,12 @@ public class GNode {
         this.padding = padding;
         currentPosition.x = scaleX(absX, gd.getPreferredSize().getWidth());
         currentPosition.y = scaleY(absY, gd.getPreferredSize().getHeight());
-        targetPosition.x = scaleY(absX, gd.getPreferredSize().getWidth());
+        targetPosition.x = scaleX(absX, gd.getPreferredSize().getWidth());
         targetPosition.y = scaleY(absY, gd.getPreferredSize().getHeight());
     }
     
     void setTargetPosition(double absX, double absY) {
-        targetPosition.x = scaleY(absX, graphDrawer.getWidth() - 2 * padding);
+        targetPosition.x = scaleX(absX, graphDrawer.getWidth() - 2 * padding);
         targetPosition.y = scaleY(absY, graphDrawer.getHeight() - 2 * padding);
     }
     
@@ -45,13 +45,13 @@ public class GNode {
     
     void rescaleX(double newW) {
         currentPosition.x = currentPosition.x * newW / actualScaleX;
-        targetPosition.x *= currentPosition.x * newW / actualScaleX;
+        targetPosition.x = targetPosition.x * newW / actualScaleX;
         actualScaleX = newW;
     }
     
     void rescaleY(double newH) {
         currentPosition.y = currentPosition.y * newH / actualScaleY;
-        targetPosition.y *= currentPosition.y * newH / actualScaleY;
+        targetPosition.y = targetPosition.y * newH / actualScaleY;
         actualScaleY = newH;
     }
     
@@ -81,5 +81,10 @@ public class GNode {
         currentPosition.y += acc * Math.sin(angle);     
         
         return true;
+    }
+    
+    boolean moving() {
+        boolean a = (currentPosition.x != targetPosition.x) && (currentPosition.y != targetPosition.y);
+        return a;
     }
 }

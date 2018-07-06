@@ -179,9 +179,9 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
     private void addButtons(JToolBar toolbar) {
 
-        stepSlider = new JSlider(JSlider.HORIZONTAL, 0, layerCnt, 1);
+        stepSlider = new JSlider(JSlider.HORIZONTAL, 0, graphs.size() - 1, 1);
         stepSlider.setToolTipText("Define step size");
-        stepSlider.setMajorTickSpacing(5);
+        stepSlider.setMajorTickSpacing(Math.min(25, Math.max(1, graphs.size()/4)));
         stepSlider.setMinorTickSpacing(1);
         stepSlider.createStandardLabels(1);
         stepSlider.setPaintTicks(true);
@@ -202,21 +202,21 @@ public class LayerAssignmentVisualizer implements ActionListener {
         stepSizeText.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent ke) {
-                String typed = stepSizeText.getText();
-                if (typed.isEmpty()) {
+                String input = stepSizeText.getText();
+                if (input.isEmpty()) {
                     return;
-                } else if (!typed.matches("\\d+")) {
+                } else if (!input.matches("\\d+")) {
                     JOptionPane.showMessageDialog(null, "Error: Please enter number between 0 and " + layerCnt + ".",
                             "Error Massage", JOptionPane.ERROR_MESSAGE);
 
                     return;
-                } else if (Integer.parseInt(typed) < 0 || Integer.parseInt(typed) > layerCnt) {
+                } else if (Integer.parseInt(input) < 0 || Integer.parseInt(input) > layerCnt) {
                     JOptionPane.showMessageDialog(null, "Error: Please enter number between 0 and " + layerCnt + ".",
                             "Error Massage", JOptionPane.ERROR_MESSAGE);
                     stepSizeText.setText(String.valueOf(stepSize));
                     return;
                 }
-                int value = Integer.parseInt(typed);
+                int value = Integer.parseInt(input);
                 stepSlider.setValue(value);
             }
         });
@@ -292,7 +292,6 @@ public class LayerAssignmentVisualizer implements ActionListener {
                                     
                                     @Override
                                     public void run() {
-                                        // TODO Auto-generated method stub
                                         gd.update(graphs.get(currentStep));
                                         
                                     }
@@ -300,7 +299,6 @@ public class LayerAssignmentVisualizer implements ActionListener {
                                 try {
                                     Thread.sleep(500);
                                 } catch (Exception e) {
-                                    // TODO Auto-generated catch block
                                     e.printStackTrace();
                                 }
                             }
