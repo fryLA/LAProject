@@ -24,14 +24,16 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
-import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 import src.tdojlafry.layered.layerAssignment.graphData.Node;
+import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 
 public class LayerAssignmentVisualizer implements ActionListener {
 
@@ -72,7 +74,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
     private boolean initial = true; // enabled: play, fwd, bck. disabled: pause, reset.
     private boolean paused = false; // enabled: play, fwd, bck, reset. disabled: pause.
     private boolean active = false; // enabled: pause. disabled: play, fwd, bck, reset.
-    
+
     private List<SimpleGraph> graphs;
 
     protected LayerAssignmentVisualizer(List<SimpleGraph> graphs) {
@@ -89,11 +91,11 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
     private int computeLayerCount(List<SimpleGraph> graphs2) {
         int cnt = 0;
-       for (SimpleGraph graph : graphs2) {
-           if (!graph.isDummyNodeGraph) {
-               cnt++;
-           }
-       }
+        for (SimpleGraph graph : graphs2) {
+            if (!graph.isDummyNodeGraph) {
+                cnt++;
+            }
+        }
         return cnt - 1;
     }
 
@@ -115,8 +117,8 @@ public class LayerAssignmentVisualizer implements ActionListener {
 
         addPanels(frame);
 
-//         frame.pack();
-//        frame.setVisible(true);
+        // frame.pack();
+        // frame.setVisible(true);
     }
 
     public void update() {
@@ -130,12 +132,11 @@ public class LayerAssignmentVisualizer implements ActionListener {
         // Add not layouted Graph
         List<Node> nodes = initialDrawing.getNodes();
         List<Edge> edges = initialDrawing.getEdges();
-        
-        
+
         // Remember how may nodes are stored in specified layer - need this for drawing.
         HashMap<Integer, Integer> nodesInLayer = new HashMap<>();
-        SimpleGraph finalGraph = graphs.get(graphs.size() -1);
-        
+        SimpleGraph finalGraph = graphs.get(graphs.size() - 1);
+
         for (Node node : finalGraph.getNodes()) {
             int layer = node.getLayer();
             if (nodesInLayer.containsKey(layer)) {
@@ -145,11 +146,9 @@ public class LayerAssignmentVisualizer implements ActionListener {
                 nodesInLayer.put(layer, 1);
             }
         }
-        
 
         gd = new GraphDrawer(nodes, edges, layerCnt, nodesInLayer);
-        
-        
+
         Border blackline = BorderFactory.createLineBorder(Color.black);
         gd.setBorder(blackline);
         layerPanel.add(gd);
@@ -273,23 +272,46 @@ public class LayerAssignmentVisualizer implements ActionListener {
         case PLAY:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), false);
             enableComponents(Arrays.asList(pauseButton), true);
-            
             paused = false;
-            
-            for (int i = currentStep; i < graphs.size(); i++) {
-                currentStep = i;
-                if (paused) {
-                    break;
-                }
-                
-                gd.update(graphs.get(i));
-            }
-            
+
+                        new Thread() {
+                            
+                            @Override
+                            public void run() {
+                                while (!paused && currentStep < layerCnt) {
+                                    
+                                    
+                                    if (currentStep + stepSize < layerCnt) {
+                                        currentStep += stepSize;
+                                    } else {
+                                        enableComponents(Arrays.asList(jumpBck, resetButton, stepSizeText, stepSlider), true);
+                                        enableComponents(Arrays.asList(playButton, jumpFwd, pauseButton), false);
+                                        currentStep = layerCnt;
+                                    }
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    
+                                    @Override
+                                    public void run() {
+                                        // TODO Auto-generated method stub
+                                        gd.update(graphs.get(currentStep));
+                                        
+                                    }
+                                });
+                                try {
+                                    Thread.sleep(500);
+                                } catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                            }
+                    }
+                        }.start();
+
             break;
         case PAUSE:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
-            
+
             paused = true;
             break;
         case RESET:
@@ -306,11 +328,11 @@ public class LayerAssignmentVisualizer implements ActionListener {
         case FWD:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
-            
+
             if (currentStep + stepSize < layerCnt) {
                 currentStep += stepSize;
             } else {
-                enableComponents(Arrays.asList(jumpBck,  resetButton, stepSizeText, stepSlider), true);
+                enableComponents(Arrays.asList(jumpBck, resetButton, stepSizeText, stepSlider), true);
                 enableComponents(Arrays.asList(playButton, jumpFwd, pauseButton), false);
                 currentStep = layerCnt;
             }
