@@ -7,9 +7,11 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
@@ -73,6 +75,8 @@ class ShapeProvider {
         // redGradiant.getPoint2().setLocation(node.currentPosition.x + GraphDrawer.PADDING + GNode.NODE_WIDTH/2,
         // node.currentPosition.y + GraphDrawer.PADDING + GNode.NODE_HEIGHT/2);
         //
+        
+        Shape shape = null;
 
         if (node.moving()) {
             GradientPaint redGradiant = new GradientPaint((int) node.currentPosition.x,
@@ -81,6 +85,9 @@ class ShapeProvider {
                     (int) (node.currentPosition.y + GNode.NODE_HEIGHT / 2), new Color(255, 150, 102),
                     false);
             g.setPaint(redGradiant);
+            
+            shape = new RoundRectangle2D.Double(node.currentPosition.x,
+                    node.currentPosition.y, GNode.NODE_WIDTH, GNode.NODE_HEIGHT, 5, 5);
         } else {
             if (node.dummy) {
                 GradientPaint grayGradient = new GradientPaint((int) node.currentPosition.x,
@@ -91,6 +98,9 @@ class ShapeProvider {
                 
                 g.setPaint(grayGradient);
                 
+                shape = new Ellipse2D.Double(node.currentPosition.x,
+                    node.currentPosition.y, GNode.NODE_WIDTH, GNode.NODE_HEIGHT);
+                
             } else {
                 
                 GradientPaint kakhiGradient = new GradientPaint((int) node.currentPosition.x,
@@ -100,29 +110,33 @@ class ShapeProvider {
                         false);
                 
                 g.setPaint(kakhiGradient);
+                
+                shape = new RoundRectangle2D.Double(node.currentPosition.x,
+                        node.currentPosition.y, GNode.NODE_WIDTH, GNode.NODE_HEIGHT, 5, 5);
+                
             }
 
         }
-        RoundRectangle2D rect = new RoundRectangle2D.Double(node.currentPosition.x,
-                node.currentPosition.y, GNode.NODE_WIDTH, GNode.NODE_HEIGHT, 5, 5);
-        g.fill(rect);
+        g.fill(shape);
         g.setPaint(new Color(183, 183, 149));
         g.setStroke(new BasicStroke(1.2f));
-        g.draw(rect);
+        g.draw(shape);
         
         // add labels
         FontRenderContext frc = g.getFontRenderContext();
         Font font = g.getFont().deriveFont(12f);
         g.setFont(font);
+        g.setPaint(Color.BLACK);
+        
         float sw = (float)font.getStringBounds(node.getLabel(), frc).getWidth();
         LineMetrics lm = font.getLineMetrics(node.getLabel(), frc);
         float sh = lm.getAscent() + lm.getDescent();
         g.setPaint(Color.BLACK);
         g.drawString(node.getLabel(),
-                (float)(rect.getX() + (rect.getWidth()-sw) / 2) , 
-                (float)(rect.getY() + (rect.getHeight() +sh) / 2 - lm.getDescent()));
-        // TODO Auto-generated method stub
-
+                (float)(shape.getBounds2D().getX() + (shape.getBounds2D().getWidth()-sw) / 2) , 
+                (float)(shape.getBounds2D().getY() + (shape.getBounds2D().getHeight() +sh) / 2 - lm.getDescent()));
+        
+        
     }
 
     public static Rectangle2D drawLayer(Graphics g1, double startPosX, double startPosY, double layerWidth,
