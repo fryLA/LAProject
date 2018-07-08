@@ -1,7 +1,10 @@
 package src.tdojlafry.layered.layerAssignment.gui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.elk.core.util.Pair;
@@ -39,41 +42,44 @@ public class LayerAssignmentComputationManager {
             return new Pair<>(false, null);
         }
     }
+    
+    
+    private static boolean topologicalSortCyclic2( String currentNode, Set<String> visited, Set<String> path, Map<String, ArrayList<String>> edges) {
 
-    private static boolean topologicalSortCyclic(ElkNode node, Set<ElkNode> visited, Set<ElkNode> path) {
-
-        if (visited.contains(node) && path.contains(node)) {
+        if (visited.contains(currentNode) && path.contains(currentNode)) {
             return true;
         }
+        
+        visited.add(currentNode);
+        path.add(currentNode);
 
-        visited.add(node);
-        path.add(node);
-
-        for (ElkEdge edge : node.getOutgoingEdges()) {
-            ElkNode targetNode = (ElkNode) edge.getTargets().get(0);
-            if (topologicalSortCyclic(targetNode, visited, path)) {
-                return true;
-            }
+        ArrayList<String> adjacentNodes = edges.get(currentNode);
+        if(adjacentNodes != null )
+        {
+              for (String target : adjacentNodes) {
+                  if (topologicalSortCyclic2(target, visited, path, edges)) {
+                      return true;
+                  }
+              }
+              path.remove(currentNode);
         }
-
-        path.remove(node);
+        path.remove(currentNode);
         return false;
     }
 
-    public static boolean isCyclic(ElkNode elkNode) {
-        List<ElkNode> nodes = elkNode.getChildren();
-        Set<ElkNode> visited = new HashSet<ElkNode>();
+    public static boolean isCyclic2(List<String> nodes, Map<String, ArrayList<String>> edges) {
 
-        for (ElkNode node : nodes) {
+        Set<String> visited = new HashSet<String>();
+
+        for (String node : nodes) {
             if (!visited.contains(node)) {
-                Set<ElkNode> path = new HashSet<ElkNode>();
+                Set<String> path = new HashSet<String>();
 
-                if (topologicalSortCyclic(node, visited, path)) {
+                if (topologicalSortCyclic2(node, visited, path, edges )) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 
