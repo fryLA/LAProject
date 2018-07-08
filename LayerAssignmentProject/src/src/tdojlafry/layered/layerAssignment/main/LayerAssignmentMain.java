@@ -46,8 +46,9 @@ public class LayerAssignmentMain {
             }
         }
         
-        LayerAssignmentView laView = new LayerAssignmentView(data);
-        laView.visualize();
+        LayerAssignmentView laView = new LayerAssignmentView();
+//        laView.visualize(data);
+//        laView.visualize(data);
         } catch (Exception e) {
             e.printStackTrace();
         }

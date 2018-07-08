@@ -35,11 +35,9 @@ import src.tdojlafry.layered.layerAssignment.graphData.Edge;
 import src.tdojlafry.layered.layerAssignment.graphData.Node;
 import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 
-public class LayerAssignmentVisualizer implements ActionListener {
+public class LayerAssignmentVisualizer extends JPanel implements ActionListener {
 
-    JFrame frame;
-
-    JPanel rootPanel;
+//    JFrame frame;
 
     JPanel layerPanel;
 
@@ -99,23 +97,24 @@ public class LayerAssignmentVisualizer implements ActionListener {
         return cnt - 1;
     }
 
-    public void createView(int width, int height) {
+    public void createView() {
 
         // Create and set up the window
-        frame = new JFrame("Layer Assignment");
-        frame.setSize(width, height);
-        frame.getRootPane().setSize(width, height);
+//        frame = new JFrame("Layer Assignment");
+//        frame.setSize(width, height);
+//        frame.getRootPane().setSize(width, height);
 
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Dimension dim = tk.getScreenSize();
+//        Toolkit tk = Toolkit.getDefaultToolkit();
+//        Dimension dim = tk.getScreenSize();
 
-        int xPos = (dim.width / 2) - (frame.getWidth() / 2);
-        int yPos = (dim.height / 2) - (frame.getHeight() / 2);
-
-        frame.setLocation(xPos, yPos);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        addPanels(frame);
+//        int xPos = (dim.width / 2) - (frame.getWidth() / 2);
+//        int yPos = (dim.height / 2) - (frame.getHeight() / 2);
+//
+//        frame.setLocation(xPos, yPos);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//        addPanels(frame);
+        addPanels();
 
         // frame.pack();
         // frame.setVisible(true);
@@ -152,20 +151,18 @@ public class LayerAssignmentVisualizer implements ActionListener {
         Border blackline = BorderFactory.createLineBorder(Color.black);
         gd.setBorder(blackline);
         layerPanel.add(gd);
-        frame.setVisible(true);
+        this.setVisible(true);
     }
 
-    private void addPanels(JFrame dialog) {
+    private void addPanels() {
 
-        rootPanel = new JPanel();
-        rootPanel.setLayout(new BorderLayout());
-        rootPanel.setPreferredSize(new Dimension(450, 450));
-        dialog.add(rootPanel);
+        setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(400, 400));
 
         // Create the control toolbar
         JToolBar toolbar = new JToolBar("Control");
         addButtons(toolbar);
-        rootPanel.add(toolbar, BorderLayout.PAGE_END);
+        add(toolbar, BorderLayout.PAGE_END);
 
         // Create graph panel
         layerPanel = new JPanel();
@@ -173,8 +170,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
         layerPanel.setLayout(g);
         layerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        rootPanel.add(layerPanel);
-
+        add(layerPanel);
     }
 
     private void addButtons(JToolBar toolbar) {
@@ -246,6 +242,7 @@ public class LayerAssignmentVisualizer implements ActionListener {
         final int width = 20;
         final int height = 20;
 
+     // Relative paht to application root!
         ImageIcon icon = getScaledIcon("icons/" + location, width, height);
         JButton button = new JButton(icon);
         button.setActionCommand(actionID);
