@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import org.eclipse.elk.core.util.Pair;
+import org.eclipse.elk.graph.ElkNode;
 
 import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 
@@ -79,14 +80,30 @@ public class LayerAssignmentView extends JFrame {
                 JFileChooser fileChooser = new JFileChooser("testGraphs");
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    
+                    
                     File selectedFile = fileChooser.getSelectedFile();
-                    Pair<Boolean, List<SimpleGraph>> computation = LayerAssignmentComputationManager.computeNewInputs(selectedFile.getPath());
-                    if (computation.getFirst()) {
-                        visualize(computation.getSecond(), selectedFile.getName());
+                    Pair<Boolean, ElkNode> elkGraph = LayerAssignmentComputationManager.parseGraphToElkGraph(selectedFile.getPath());
+                    
+                    if (elkGraph.getFirst()) {
+                        if (LayerAssignmentComputationManager.isCyclic(elkGraph.getSecond())) {
+                            Pair<Boolean, List<SimpleGraph>> computation = LayerAssignmentComputationManager.computeNewInputs(elkGraph.getSecond());
+                            if (computation.getFirst()) {
+                                visualize(computation.getSecond(), selectedFile.getName());
+                            } else {
+                                JOptionPane.showMessageDialog(tabbedPane,null, "No valid input file.",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(tabbedPane,null, "Graph is not acyclic.",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(tabbedPane,null, "No valid input file.",
+                        JOptionPane.showMessageDialog(tabbedPane,null, "No Parsing possible.",
                                 JOptionPane.ERROR_MESSAGE);
                     }
+                    
+                    
                             
                 }
             }

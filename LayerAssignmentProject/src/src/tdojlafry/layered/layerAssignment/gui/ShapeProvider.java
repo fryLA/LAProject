@@ -82,13 +82,25 @@ class ShapeProvider {
                     false);
             g.setPaint(redGradiant);
         } else {
-            GradientPaint kakhiGradient = new GradientPaint((int) node.currentPosition.x,
-                    (int) node.currentPosition.y , new Color(183, 183, 149),
-                    (int) (node.currentPosition.x + GNode.NODE_WIDTH / 2),
-                    (int) (node.currentPosition.y + GNode.NODE_HEIGHT / 2), new Color(224, 224, 209),
-                    false);
-            
-            g.setPaint(kakhiGradient);
+            if (node.dummy) {
+                GradientPaint grayGradient = new GradientPaint((int) node.currentPosition.x,
+                        (int) node.currentPosition.y , new Color(230, 230, 230),
+                        (int) (node.currentPosition.x + GNode.NODE_WIDTH / 2),
+                        (int) (node.currentPosition.y + GNode.NODE_HEIGHT / 2),  new Color(242, 242, 242),
+                        false);
+                
+                g.setPaint(grayGradient);
+                
+            } else {
+                
+                GradientPaint kakhiGradient = new GradientPaint((int) node.currentPosition.x,
+                        (int) node.currentPosition.y , new Color(183, 183, 149),
+                        (int) (node.currentPosition.x + GNode.NODE_WIDTH / 2),
+                        (int) (node.currentPosition.y + GNode.NODE_HEIGHT / 2), new Color(224, 224, 209),
+                        false);
+                
+                g.setPaint(kakhiGradient);
+            }
 
         }
         RoundRectangle2D rect = new RoundRectangle2D.Double(node.currentPosition.x,
@@ -125,13 +137,13 @@ class ShapeProvider {
         //
 
         if (visible) {
-            GradientPaint redGradiant = new GradientPaint((int) startPosX, (int) startPosY, new Color(230, 250, 255),
+            GradientPaint blueGradient = new GradientPaint((int) startPosX, (int) startPosY, new Color(230, 250, 255),
                     (int) (startPosX + layerWidth), (int) (startPosY + layerHeight), new Color(128, 229, 255), false);
-            g.setPaint(redGradiant);
+            g.setPaint(blueGradient);
         } else {
-            GradientPaint redGradiant = new GradientPaint((int) startPosX, (int) startPosY, new Color(230, 230, 230),
+            GradientPaint grayGradient = new GradientPaint((int) startPosX, (int) startPosY, new Color(230, 230, 230),
                     (int) (startPosX + layerWidth), (int) (startPosY + layerHeight), new Color(242, 242, 242), false);
-            g.setPaint(redGradiant);
+            g.setPaint(grayGradient);
 
         }
         Rectangle2D rect = new Rectangle2D.Double(startPosX, startPosY, layerWidth, layerHeight);
