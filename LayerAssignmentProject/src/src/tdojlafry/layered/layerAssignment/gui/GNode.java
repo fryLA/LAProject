@@ -11,6 +11,10 @@ public class GNode {
     
     private final static double MOVE_STEPS = 10;
     private final static double MOVE_SNAPIN = 1;
+    
+    private String label = "";
+    
+    boolean dummy = false;
 
     GraphDrawer graphDrawer;
     Position currentPosition = new Position();
@@ -19,7 +23,9 @@ public class GNode {
     double actualScaleY;
     double padding;
     
-    public GNode(double absX, double absY, GraphDrawer gd, double padding) {
+    public GNode(double absX, double absY, GraphDrawer gd, double padding, String l, boolean d) {
+        dummy = d;
+        label = l;
         graphDrawer = gd;
         this.padding = padding;
         currentPosition.x = scaleX(absX, gd.getPreferredSize().getWidth());
@@ -31,6 +37,10 @@ public class GNode {
     void setTargetPosition(double absX, double absY) {
         targetPosition.x = scaleX(absX, graphDrawer.getWidth() - 2 * padding);
         targetPosition.y = scaleY(absY, graphDrawer.getHeight() - 2 * padding);
+    }
+    
+    protected String getLabel()  {
+        return label;
     }
     
     double scaleX(double x, double w) {
@@ -58,15 +68,15 @@ public class GNode {
     boolean update() {
         if ((Math.abs(currentPosition.x - targetPosition.x) < MOVE_SNAPIN) &&
            (Math.abs(currentPosition.y - targetPosition.y) < MOVE_SNAPIN)) {
-            targetPosition.x = currentPosition.x;
-            targetPosition.y = currentPosition.y;
+            currentPosition.x = targetPosition.x;
+            currentPosition.y = targetPosition.y;
             return false;
         } 
         if (Math.abs(currentPosition.x - targetPosition.x) < MOVE_SNAPIN) {
-            targetPosition.x = currentPosition.x;
+            currentPosition.x = targetPosition.x;
         } 
         if (Math.abs(currentPosition.y - targetPosition.y) < MOVE_SNAPIN) {
-            targetPosition.y = currentPosition.y;
+            currentPosition.y = targetPosition.y;
         } 
                 
         double dx = targetPosition.x - currentPosition.x;
@@ -84,7 +94,13 @@ public class GNode {
     }
     
     boolean moving() {
-        boolean a = (currentPosition.x != targetPosition.x) && (currentPosition.y != targetPosition.y);
+        
+        boolean a = ((Math.abs(currentPosition.x - targetPosition.x) >= MOVE_SNAPIN) ||
+                (Math.abs(currentPosition.y - targetPosition.y) >= MOVE_SNAPIN));
         return a;
+    }
+    
+    protected boolean isDummy() {
+        return dummy;
     }
 }

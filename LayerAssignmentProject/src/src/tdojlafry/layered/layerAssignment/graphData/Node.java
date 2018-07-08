@@ -13,6 +13,8 @@ public class Node {
     public final static int DEFAULT_NODE_WIDTH = 10;
     public final static int DEFAULT_NODE_HEIGHT = 10;
     
+    public String label = "";
+    
     public Node() {
         
     }

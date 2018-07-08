@@ -2,10 +2,13 @@ package src.tdojlafry.layered.layerAssignment.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
@@ -94,6 +97,18 @@ class ShapeProvider {
         g.setPaint(new Color(183, 183, 149));
         g.setStroke(new BasicStroke(1.2f));
         g.draw(rect);
+        
+        // add labels
+        FontRenderContext frc = g.getFontRenderContext();
+        Font font = g.getFont().deriveFont(12f);
+        g.setFont(font);
+        float sw = (float)font.getStringBounds(node.getLabel(), frc).getWidth();
+        LineMetrics lm = font.getLineMetrics(node.getLabel(), frc);
+        float sh = lm.getAscent() + lm.getDescent();
+        g.setPaint(Color.BLACK);
+        g.drawString(node.getLabel(),
+                (float)(rect.getX() + (rect.getWidth()-sw) / 2) , 
+                (float)(rect.getY() + (rect.getHeight() +sh) / 2 - lm.getDescent()));
         // TODO Auto-generated method stub
 
     }

@@ -105,14 +105,14 @@ public class Parser
             ElkNode currNode = elkNodes.next();
 //          Speichere edges die zur jetzigen Node gehören
         	List<String> currentEdges = edges.get(nodes.get(i));
-        	System.out.println("------------------------------------------------------");
-			System.out.println("Current Node " + nodes.get(i));
+//        	System.out.println("------------------------------------------------------");
+//			System.out.println("Current Node " + nodes.get(i));
 
 //        	Testen ueberhaupt Kanten zu diesem Knoten(nodes.get(i) existieren.
 //        	System.out.println("SCHEIS");
         	if(currentEdges != null)
         	{
-        		System.out.println("Edges are not null");
+//        		System.out.println("Edges are not null");
 //        		Uber alle kanten iterieren
         		for(int j = 0; j < currentEdges.size(); j++)
             	{
@@ -123,7 +123,7 @@ public class Parser
             		{
             			if(child.getLabels().get(0).getText().equals(nodes.get(i)))
             			{
-                    		System.out.println("Currentt !!!! source" + child.getLabels().get(0).getText());
+//                    		System.out.println("Currentt !!!! source" + child.getLabels().get(0).getText());
             				newEdge.getSources().add(child);
             			}
             		}
@@ -136,18 +136,18 @@ public class Parser
             				currNode = elkNodes.next();
             			} catch (Exception e)
             			{
-            				System.out.println("BOESE");
+//            				System.out.println("BOESE");
             				elkNodes = parentNode.getChildren().iterator();
             	            currNode = elkNodes.next();
             			}
             			
-            			System.out.println("Current Edge " + currentEdges.get(j) );
-            			System.out.println("Current Text " + currNode.getLabels().get(0).getText());
+//            			System.out.println("Current Edge " + currentEdges.get(j) );
+//            			System.out.println("Current Text " + currNode.getLabels().get(0).getText());
             			
 //            			Wenn die current elkNode den gleichens Namen wie einer der Nodes in der Adjazenzliste, ex. eine Kante zwischen ihnen
             			if(currNode.getLabels().get(0).getText().equals(currentEdges.get(j)))
             			{
-            			    System.out.println("Kannte hinzugefuegt");
+//            			    System.out.println("Kannte hinzugefuegt");
             				newEdge.getTargets().add(currNode);
             			}
 //            			Naechsten Node checken    
@@ -159,20 +159,20 @@ public class Parser
         }
 
 //        Graphen der gelayered werden soll returnen
-        for(ElkEdge edge : parentNode.getContainedEdges())
-        {
-        	System.out.println("SORUCes:" + edge.getSources().get(0).getLabels().get(0).getText());
-        }
+//        for(ElkEdge edge : parentNode.getContainedEdges())
+//        {
+////        	System.out.println("SORUCes:" + edge.getSources().get(0).getLabels().get(0).getText());
+//        }
         
-        for(ElkNode node : parentNode.getChildren())
-        {
-        	List<ElkEdge> edges = parentNode.getContainedEdges();
-        	System.out.println("Node:" + node.getLabels().get(0).getText());
-        	
-        }
+//        for(ElkNode node : parentNode.getChildren())
+//        {
+//        	List<ElkEdge> edges = parentNode.getContainedEdges();
+////        	System.out.println("Node:" + node.getLabels().get(0).getText());
+//        	
+//        }
         
         
-    	System.out.println("DWADWADSD");
+//    	System.out.println("DWADWADSD");
 
 		return parentNode;
 		

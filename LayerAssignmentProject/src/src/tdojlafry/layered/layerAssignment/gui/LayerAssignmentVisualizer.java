@@ -127,10 +127,17 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     void initialize() {
 
         SimpleGraph initialDrawing = graphs.get(0);
-
+        
         // Add not layouted Graph
         List<Node> nodes = initialDrawing.getNodes();
         List<Edge> edges = initialDrawing.getEdges();
+        
+        
+        for (Node node : graphs.get(graphs.size()-1).getNodes() ) {
+            if ( node.isDummy) {
+                nodes.add(node);
+            }
+        }
 
         // Remember how may nodes are stored in specified layer - need this for drawing.
         HashMap<Integer, Integer> nodesInLayer = new HashMap<>();
@@ -242,7 +249,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         final int width = 20;
         final int height = 20;
 
-     // Relative paht to application root!
+     // Relative path to application root!
         ImageIcon icon = getScaledIcon("icons/" + location, width, height);
         JButton button = new JButton(icon);
         button.setActionCommand(actionID);
@@ -275,15 +282,15 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                             
                             @Override
                             public void run() {
-                                while (!paused && currentStep < layerCnt) {
+                                while (!paused && currentStep < graphs.size()) {
                                     
                                     
-                                    if (currentStep + stepSize < layerCnt) {
+                                    if (currentStep + stepSize < graphs.size()) {
                                         currentStep += stepSize;
                                     } else {
                                         enableComponents(Arrays.asList(jumpBck, resetButton, stepSizeText, stepSlider), true);
                                         enableComponents(Arrays.asList(playButton, jumpFwd, pauseButton), false);
-                                        currentStep = layerCnt;
+                                        currentStep = graphs.size() - 1;
                                     }
                                 SwingUtilities.invokeLater(new Runnable() {
                                     
@@ -318,18 +325,18 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
             List<Node> nodes = initialDrawing.getNodes();
             List<Edge> edges = initialDrawing.getEdges();
 
-            gd.reset(nodes, edges, layerCnt);
+            gd.reset(nodes, edges, graphs.size() - 1);
             break;
         case FWD:
             enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
 
-            if (currentStep + stepSize < layerCnt) {
+            if (currentStep + stepSize < graphs.size()) {
                 currentStep += stepSize;
             } else {
                 enableComponents(Arrays.asList(jumpBck, resetButton, stepSizeText, stepSlider), true);
                 enableComponents(Arrays.asList(playButton, jumpFwd, pauseButton), false);
-                currentStep = layerCnt;
+                currentStep = graphs.size() - 1;
             }
             gd.update(graphs.get(currentStep));
             break;

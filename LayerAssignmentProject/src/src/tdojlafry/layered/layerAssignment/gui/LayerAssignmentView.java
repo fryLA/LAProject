@@ -11,7 +11,10 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+
+import org.eclipse.elk.core.util.Pair;
 
 import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 
@@ -77,9 +80,14 @@ public class LayerAssignmentView extends JFrame {
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    List<SimpleGraph> graphs =
-                            LayerAssignmentComputationManager.computeNewInputs(selectedFile.getPath());
-                    visualize(graphs, selectedFile.getName());
+                    Pair<Boolean, List<SimpleGraph>> computation = LayerAssignmentComputationManager.computeNewInputs(selectedFile.getPath());
+                    if (computation.getFirst()) {
+                        visualize(computation.getSecond(), selectedFile.getName());
+                    } else {
+                        JOptionPane.showMessageDialog(tabbedPane,null, "No valid input file.",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                            
                 }
             }
         });
