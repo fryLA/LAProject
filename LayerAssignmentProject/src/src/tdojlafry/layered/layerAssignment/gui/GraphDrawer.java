@@ -173,10 +173,10 @@ public class GraphDrawer extends JPanel implements ActionListener {
                 } else {
                     maxLayer = Math.max(maxLayer, node.getLayer());
                     Rectangle2D layerRect = layers.get(node.layer);
-                    gNode.targetPosition.x = layerRect.getCenterX() - (Node.DEFAULT_NODE_WIDTH / 2) - PADDING;
+                    gNode.targetPosition.x = layerRect.getCenterX() - (GNode.NODE_WIDTH / 2);
                     
                     double d = (layerRect.getHeight() ) / (nodesInLayer.get(node.layer) + 1);
-                    gNode.targetPosition.y = layerRect.getMinY() + ((node.posInlayer) * d);
+                    gNode.targetPosition.y = layerRect.getMinY() + ((node.posInlayer + 1) * d - GNode.NODE_HEIGHT /2);
                     if (gNode.isDummy()) {
                         gNode.currentPosition.x = gNode.targetPosition.x;
                         gNode.currentPosition.y = gNode.targetPosition.y;

@@ -29,10 +29,10 @@ class ShapeProvider {
 
         Graphics2D g = (Graphics2D) g1.create();
         g.setColor(Color.BLACK);
-        double x1 = startingNode.currentPosition.x + halfWidth + GraphDrawer.PADDING;
-        double y1 = startingNode.currentPosition.y + halfHeight + GraphDrawer.PADDING;
-        double x2 = targetNode.currentPosition.x + halfWidth + GraphDrawer.PADDING;
-        double y2 = targetNode.currentPosition.y + halfHeight + GraphDrawer.PADDING;
+        double x1 = startingNode.currentPosition.x + halfWidth;
+        double y1 = startingNode.currentPosition.y + halfHeight;
+        double x2 = targetNode.currentPosition.x + halfWidth;
+        double y2 = targetNode.currentPosition.y + halfHeight;
 
         double dx = x2 - x1;
         double dy = y2 - y1;
@@ -75,24 +75,24 @@ class ShapeProvider {
         //
 
         if (node.moving()) {
-            GradientPaint redGradiant = new GradientPaint((int) node.currentPosition.x + GraphDrawer.PADDING,
-                    (int) node.currentPosition.y + GraphDrawer.PADDING, new Color(255, 238, 230),
-                    (int) (node.currentPosition.x + GraphDrawer.PADDING + GNode.NODE_WIDTH / 2),
-                    (int) (node.currentPosition.y + GraphDrawer.PADDING + GNode.NODE_HEIGHT / 2), new Color(255, 150, 102),
+            GradientPaint redGradiant = new GradientPaint((int) node.currentPosition.x,
+                    (int) node.currentPosition.y, new Color(255, 238, 230),
+                    (int) (node.currentPosition.x + GNode.NODE_WIDTH / 2),
+                    (int) (node.currentPosition.y + GNode.NODE_HEIGHT / 2), new Color(255, 150, 102),
                     false);
             g.setPaint(redGradiant);
         } else {
-            GradientPaint kakhiGradient = new GradientPaint((int) node.currentPosition.x + GraphDrawer.PADDING,
-                    (int) node.currentPosition.y + GraphDrawer.PADDING, new Color(183, 183, 149),
-                    (int) (node.currentPosition.x + GraphDrawer.PADDING + GNode.NODE_WIDTH / 2),
-                    (int) (node.currentPosition.y + GraphDrawer.PADDING + GNode.NODE_HEIGHT / 2), new Color(224, 224, 209),
+            GradientPaint kakhiGradient = new GradientPaint((int) node.currentPosition.x,
+                    (int) node.currentPosition.y , new Color(183, 183, 149),
+                    (int) (node.currentPosition.x + GNode.NODE_WIDTH / 2),
+                    (int) (node.currentPosition.y + GNode.NODE_HEIGHT / 2), new Color(224, 224, 209),
                     false);
             
             g.setPaint(kakhiGradient);
 
         }
-        RoundRectangle2D rect = new RoundRectangle2D.Double(node.currentPosition.x + GraphDrawer.PADDING,
-                node.currentPosition.y + GraphDrawer.PADDING, GNode.NODE_WIDTH, GNode.NODE_HEIGHT, 5, 5);
+        RoundRectangle2D rect = new RoundRectangle2D.Double(node.currentPosition.x,
+                node.currentPosition.y, GNode.NODE_WIDTH, GNode.NODE_HEIGHT, 5, 5);
         g.fill(rect);
         g.setPaint(new Color(183, 183, 149));
         g.setStroke(new BasicStroke(1.2f));
