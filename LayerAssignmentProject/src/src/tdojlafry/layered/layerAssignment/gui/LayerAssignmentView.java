@@ -86,7 +86,7 @@ public class LayerAssignmentView extends JFrame {
                     Pair<Boolean, ElkNode> elkGraph = LayerAssignmentComputationManager.parseGraphToElkGraph(selectedFile.getPath());
                     
                     if (elkGraph.getFirst()) {
-                        if (LayerAssignmentComputationManager.isCyclic(elkGraph.getSecond())) {
+                        if (!LayerAssignmentComputationManager.isCyclic(elkGraph.getSecond())) {
                             Pair<Boolean, List<SimpleGraph>> computation = LayerAssignmentComputationManager.computeNewInputs(elkGraph.getSecond());
                             if (computation.getFirst()) {
                                 visualize(computation.getSecond(), selectedFile.getName());
