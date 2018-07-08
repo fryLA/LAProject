@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -19,6 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -48,6 +50,10 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     GraphDrawer gd;
 
     private JSlider stepSlider;
+    
+    private JSlider speedSlider;
+    
+    private JSlider nodeSizeSlider;
 
     private JButton resetButton;
 
@@ -168,6 +174,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
 
         // Create the control toolbar
         JToolBar toolbar = new JToolBar("Control");
+        toolbar.setLayout(new FlowLayout(FlowLayout.LEFT, 4, 4));
         addButtons(toolbar);
         add(toolbar, BorderLayout.PAGE_END);
 
@@ -181,6 +188,8 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     }
 
     private void addButtons(JToolBar toolbar) {
+        
+        toolbar.add(new JLabel("Step size:"));
 
         stepSlider = new JSlider(JSlider.HORIZONTAL, 0, graphs.size() - 1, 1);
         stepSlider.setToolTipText("Define step size");
@@ -223,7 +232,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                 stepSlider.setValue(value);
             }
         });
-
+        
         toolbar.add(stepSlider);
         toolbar.add(stepSizeText);
 
@@ -241,6 +250,17 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
 
         jumpBck = createButton("bck_en.png", BCK, "Jump backward", false);
         toolbar.add(jumpBck);
+        
+        toolbar.add(new JLabel("Animation speed:"));
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 0, graphs.size() - 1, 1);
+        speedSlider.setToolTipText("Define step size");
+        speedSlider.setMajorTickSpacing(Math.min(25, Math.max(1, graphs.size()/4)));
+        speedSlider.setMinorTickSpacing(1);
+        speedSlider.createStandardLabels(1);
+        speedSlider.setPaintTicks(true);
+        speedSlider.setPaintLabels(true);
+        
+        toolbar.add(speedSlider);
 
     }
 

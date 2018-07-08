@@ -75,13 +75,9 @@ public class Parser
 		
 		System.out.println("DA");
 		
-		if(LayerAssignmentComputationManager.isCyclic2(nodes, edges) == true)
+		if(LayerAssignmentComputationManager.isCyclic(nodes, edges) == true)
 		{
-			System.out.println("Cyclic");	
-		}
-		else
-		{
-			System.out.println("ACyclic");	
+			return null;
 		}
 		
 	

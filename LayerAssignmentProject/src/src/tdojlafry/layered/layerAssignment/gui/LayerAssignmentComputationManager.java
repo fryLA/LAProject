@@ -31,20 +31,20 @@ public class LayerAssignmentComputationManager {
         }
     }
 
-    protected static Pair<Boolean, ElkNode> parseGraphToElkGraph(String path) {
+    protected static ElkNode parseGraphToElkGraph(String path) {
         try {
             ElkNode graph = Parser.parse(path); // does not ignore parsing
 
-            return new Pair<>(true, graph);
+            return graph;
 
         } catch (Exception ioe) {
             ioe.printStackTrace();
-            return new Pair<>(false, null);
+            return null;
         }
     }
     
     
-    private static boolean topologicalSortCyclic2( String currentNode, Set<String> visited, Set<String> path, Map<String, ArrayList<String>> edges) {
+    private static boolean topologicalSortCyclic( String currentNode, Set<String> visited, Set<String> path, Map<String, ArrayList<String>> edges) {
 
         if (visited.contains(currentNode) && path.contains(currentNode)) {
             return true;
@@ -57,7 +57,7 @@ public class LayerAssignmentComputationManager {
         if(adjacentNodes != null )
         {
               for (String target : adjacentNodes) {
-                  if (topologicalSortCyclic2(target, visited, path, edges)) {
+                  if (topologicalSortCyclic(target, visited, path, edges)) {
                       return true;
                   }
               }
@@ -67,7 +67,7 @@ public class LayerAssignmentComputationManager {
         return false;
     }
 
-    public static boolean isCyclic2(List<String> nodes, Map<String, ArrayList<String>> edges) {
+    public static boolean isCyclic(List<String> nodes, Map<String, ArrayList<String>> edges) {
 
         Set<String> visited = new HashSet<String>();
 
@@ -75,7 +75,7 @@ public class LayerAssignmentComputationManager {
             if (!visited.contains(node)) {
                 Set<String> path = new HashSet<String>();
 
-                if (topologicalSortCyclic2(node, visited, path, edges )) {
+                if (topologicalSortCyclic(node, visited, path, edges )) {
                     return true;
                 }
             }

@@ -80,32 +80,25 @@ public class LayerAssignmentView extends JFrame {
                 JFileChooser fileChooser = new JFileChooser("testGraphs");
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    
-                    
+
                     File selectedFile = fileChooser.getSelectedFile();
-                    Pair<Boolean, ElkNode> elkGraph = LayerAssignmentComputationManager.parseGraphToElkGraph(selectedFile.getPath());
-                    
-                    if (elkGraph.getFirst()) {
-                        if (!LayerAssignmentComputationManager.isCyclic(elkGraph.getSecond())) {
-                            Pair<Boolean, List<SimpleGraph>> computation = LayerAssignmentComputationManager.computeNewInputs(elkGraph.getSecond());
-                            if (computation.getFirst()) {
-                                visualize(computation.getSecond(), selectedFile.getName());
-                            } else {
-                                JOptionPane.showMessageDialog(tabbedPane,null, "No valid input file.",
-                                        JOptionPane.ERROR_MESSAGE);
-                            }
+                    ElkNode elkGraph = LayerAssignmentComputationManager.parseGraphToElkGraph(selectedFile.getPath());
+
+                    if (elkGraph != null) {
+                        Pair<Boolean, List<SimpleGraph>> computation =
+                                LayerAssignmentComputationManager.computeNewInputs(elkGraph);
+                        if (computation.getFirst()) {
+                            visualize(computation.getSecond(), selectedFile.getName());
                         } else {
-                            JOptionPane.showMessageDialog(tabbedPane,null, "Graph is not acyclic.",
+                            JOptionPane.showMessageDialog(tabbedPane, null, "No valid input file.",
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(tabbedPane,null, "No Parsing possible.",
+                        JOptionPane.showMessageDialog(tabbedPane, null, "Graph is not acyclic.",
                                 JOptionPane.ERROR_MESSAGE);
                     }
-                    
-                    
-                            
                 }
+
             }
         });
 
