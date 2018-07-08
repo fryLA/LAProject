@@ -4,6 +4,8 @@ import org.eclipse.elk.graph.ElkLabel;
 import org.eclipse.elk.graph.ElkNode;
 import org.eclipse.elk.graph.util.ElkGraphUtil;
 
+import src.tdojlafry.layered.layerAssignment.gui.LayerAssignmentComputationManager;
+
 import java.awt.Label;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -66,16 +68,21 @@ public class Parser
 						edges.get(start).add(end);
 					}
 				}
-//				System.out.println("Length " + tokens.length);
-//				String nextToken = peek(tokens, pos);
-//				System.out.print(currentToken + " ");
-//				System.out.print("next" + nextToken + " ");
-				
-			}
-			
+			}	
 		}
 		
 		
+		
+		System.out.println("DA");
+		
+		if(LayerAssignmentComputationManager.isCyclic2(nodes, edges) == true)
+		{
+			System.out.println("Cyclic");	
+		}
+		else
+		{
+			System.out.println("ACyclic");	
+		}
 		
 	
 		//		DIE KOMPLEXITÄT SUCKT
@@ -87,16 +94,7 @@ public class Parser
             newLabel.setText(nodes.get(i));            
         }
 
-        
-//        Iterator<ElkNode> elkNodes2 = parentNode.getChildren().iterator();
-//        do
-//		{ 
-//        	ElkNode currNode2 = elkNodes2.next();
-//        	System.out.println("RRR" + currNode2.getLabels().get(0).getText());
-//		}   while(elkNodes2.hasNext());
-        
-//        IST DIE FOR LOOP UNNOETIG WTF
-
+       
         for (int i = 0; i < parentNode.getChildren().size(); i++) 
         {
 //        	Iteator um über alle ElkNodes zu iterieren
