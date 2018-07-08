@@ -291,6 +291,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                                         enableComponents(Arrays.asList(jumpBck, resetButton, stepSizeText, stepSlider), true);
                                         enableComponents(Arrays.asList(playButton, jumpFwd, pauseButton), false);
                                         currentStep = graphs.size() - 1;
+                                        paused = true;
                                     }
                                 SwingUtilities.invokeLater(new Runnable() {
                                     
@@ -324,6 +325,12 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
 
             List<Node> nodes = initialDrawing.getNodes();
             List<Edge> edges = initialDrawing.getEdges();
+            
+            for (Node node : graphs.get(graphs.size()-1).getNodes() ) {
+                if ( node.isDummy) {
+                    nodes.add(node);
+                }
+            }
 
             gd.reset(nodes, edges, graphs.size() - 1);
             break;
