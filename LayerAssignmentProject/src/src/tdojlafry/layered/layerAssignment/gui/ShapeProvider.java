@@ -123,13 +123,14 @@ class ShapeProvider {
         g.draw(shape);
         
         // add labels
-        FontRenderContext frc = g.getFontRenderContext();
-        Font font = g.getFont().deriveFont(12f);
+        String text = node.getLabel();
+        FontRenderContext frc = new FontRenderContext(null,  false,  true);//g.getFontRenderContext();
+        Font font = g.getFont().deriveFont((float)(GNode.node_widht / text.length()));
         g.setFont(font);
         g.setPaint(Color.BLACK);
         
-        float sw = (float)font.getStringBounds(node.getLabel(), frc).getWidth();
-        LineMetrics lm = font.getLineMetrics(node.getLabel(), frc);
+        float sw = (float)font.getStringBounds(text, frc).getWidth();
+        LineMetrics lm = font.getLineMetrics(text, frc);
         float sh = lm.getAscent() + lm.getDescent();
         g.setPaint(Color.BLACK);
         g.drawString(node.getLabel(),

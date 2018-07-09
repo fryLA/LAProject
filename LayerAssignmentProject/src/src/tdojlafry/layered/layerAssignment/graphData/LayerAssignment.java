@@ -84,6 +84,11 @@ public class LayerAssignment {
             ElkNode target = ElkGraphUtil.connectableShapeToNode(edge.getTargets().get(0));
             lastDummy = source;
             
+            String sourceLabel = "";
+            if (source.getLabels() != null && !source.getLabels().isEmpty()) {sourceLabel = source.getLabels().get(0).getText();}
+            String targetLabel = "";
+            if (target.getLabels() != null && !target.getLabels().isEmpty()) {targetLabel = target.getLabels().get(0).getText();}
+            
             ElkEdge lastEdge = null;
 
             //iteriere durch alle Layer zwischen source und target
@@ -98,7 +103,7 @@ public class LayerAssignment {
                     dummy.setProperty(LAYER, i);
                     dummy.setProperty(POSITION_IN_LAYER, -1);
                     dummy.setProperty(POSITION_IN_LAYER, getMaxPositionInLayer(dummy.getProperty(LAYER), elkGraph) + 1);
-                    ElkGraphUtil.createLabel("d" + i, dummy);
+                    ElkGraphUtil.createLabel(sourceLabel + ":" + targetLabel, dummy);
 //                    dummy.setProperty(POSITION_IN_LAYER, getMaxPositionInLayer(dummy.getProperty(LAYER), elkGraph) + 1);
                     edge.getTargets().set(0, dummy);
                     
@@ -117,7 +122,7 @@ public class LayerAssignment {
                     dummy.setProperty(LAYER, i);
                     dummy.setProperty(POSITION_IN_LAYER, -1);
                     dummy.setProperty(POSITION_IN_LAYER, getMaxPositionInLayer(dummy.getProperty(LAYER), elkGraph) + 1);
-                    ElkGraphUtil.createLabel("d" + i, dummy);
+                    ElkGraphUtil.createLabel(sourceLabel + ":"  + targetLabel, dummy);
                     
                     ElkEdge dummyEdge1 = ElkGraphUtil.createEdge(elkGraph);
                     dummyEdge1.setProperty(IS_DUMMY, true);

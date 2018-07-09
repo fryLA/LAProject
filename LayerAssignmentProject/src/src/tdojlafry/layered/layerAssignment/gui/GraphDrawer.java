@@ -73,7 +73,7 @@ public class GraphDrawer extends JPanel implements ActionListener {
         this.nodesInLayer = nodesInLayer;
 
 
-        this.addMouseListener(new PopClickListener());
+//        this.addMouseListener(new PopClickListener());
         this.addComponentListener(new ComponentListener() {
 
             @Override
@@ -117,69 +117,69 @@ public class GraphDrawer extends JPanel implements ActionListener {
     }
     
 
-    /**
-     * Save the Panel as image with the name and the type in parameters
-     *
-     * @param name
-     *            name of the file
-     * @param type
-     *            type of the file
-     */
-    public void saveImage(String name, String type) {
-        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = image.createGraphics();
-        paint(g2);
-        try {
-            JFileChooser fileChooser = new JFileChooser("savedImages");
-            int returnValue = fileChooser.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                        
-                ImageIO.write(image, type, new File(selectedFile + "." + type));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    class PopUpMenu extends JPopupMenu {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 1L;
-        JMenuItem anItem;
-
-        public PopUpMenu() {
-            anItem = new JMenuItem("Save as Image");
-            anItem.addActionListener(new ActionListener() {
-                
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    saveImage("image", "png");
-                    
-                }
-            });
-            add(anItem);
-        }
-
-    }
-    
-    class PopClickListener extends MouseAdapter {
-        public void mousePressed(MouseEvent e){
-            if (e.isPopupTrigger())
-                doPop(e);
-        }
-
-        public void mouseReleased(MouseEvent e){
-            if (e.isPopupTrigger())
-                doPop(e);
-        }
-
-        private void doPop(MouseEvent e){
-            PopUpMenu menu = new PopUpMenu();
-            menu.show(e.getComponent(), e.getX(), e.getY());
-        }
-    }
+//    /**
+//     * Save the Panel as image with the name and the type in parameters
+//     *
+//     * @param name
+//     *            name of the file
+//     * @param type
+//     *            type of the file
+//     */
+//    public void saveImage(String name, String type) {
+//        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+//        Graphics2D g2 = image.createGraphics();
+//        paint(g2);
+//        try {
+//            JFileChooser fileChooser = new JFileChooser("savedImages");
+//            int returnValue = fileChooser.showOpenDialog(null);
+//            if (returnValue == JFileChooser.APPROVE_OPTION) {
+//                File selectedFile = fileChooser.getSelectedFile();
+//                        
+//                ImageIO.write(image, type, new File(selectedFile + "." + type));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    class PopUpMenu extends JPopupMenu {
+//        /**
+//         * 
+//         */
+//        private static final long serialVersionUID = 1L;
+//        JMenuItem anItem;
+//
+//        public PopUpMenu() {
+//            anItem = new JMenuItem("Save as Image");
+//            anItem.addActionListener(new ActionListener() {
+//                
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    saveImage("image", "png");
+//                    
+//                }
+//            });
+//            add(anItem);
+//        }
+//
+//    }
+//    
+//    class PopClickListener extends MouseAdapter {
+//        public void mousePressed(MouseEvent e){
+//            if (e.isPopupTrigger())
+//                doPop(e);
+//        }
+//
+//        public void mouseReleased(MouseEvent e){
+//            if (e.isPopupTrigger())
+//                doPop(e);
+//        }
+//
+//        private void doPop(MouseEvent e){
+//            PopUpMenu menu = new PopUpMenu();
+//            menu.show(e.getComponent(), e.getX(), e.getY());
+//        }
+//    }
 
     @Override
     public Dimension getPreferredSize() {

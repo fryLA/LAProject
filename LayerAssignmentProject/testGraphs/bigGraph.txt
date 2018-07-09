@@ -1,0 +1,89 @@
+node n21
+node n22
+node n23
+node n24
+node n25
+node n26
+node n27
+node n28
+node n29
+node n10
+node n11
+node n12
+node n13
+node n14
+node n15
+node n16
+node n17
+node n18
+node n19
+node n30
+node n31
+node n32
+node n33
+node n34
+node n35
+node n36
+node n37
+node n38
+node n39
+
+edge n11 n12
+edge n11 n13
+edge n12 n14
+edge n11 n15
+edge n14 n35
+edge n10 n18
+edge n18 n19
+edge n14 n18
+edge n19 n17
+edge n12 n39
+edge n11 n32
+edge n22 n33
+edge n21 n33
+edge n22 n34
+edge n21 n35
+edge n24 n35
+edge n10 n18
+edge n18 n19
+edge n14 n18
+edge n22 n39
+edge n21 n22
+edge n32 n33
+edge n31 n33
+edge n32 n34
+edge n21 n35
+edge n24 n35
+edge n20 n38
+edge n26 n39
+edge n24 n38
+edge n30 n37
+edge n32 n39
+edge n16 n39
+edge n21 n22
+edge n32 n33
+edge n31 n33
+edge n32 n34
+edge n21 n35
+edge n24 n35
+edge n20 n38
+edge n28 n39
+edge n24 n38
+edge n39 n37
+edge n32 n39
+edge n28 n39
+edge n24 n38
+edge n30 n31
+edge n32 n31
+edge n31 n33
+edge n33 n34
+edge n30 n34
+edge n30 n35
+edge n34 n35
+edge n31 n35
+edge n36 n37
+edge n20 n38
+edge n37 n38
+edge n23 n38
+edge n33 n39
+edge n12 n39

@@ -7,7 +7,7 @@ node n6
 node n7
 node n8
 node n9
-node n10
+node n11
 
 edge n1 n2
 edge n2 n3
@@ -15,7 +15,7 @@ edge n1 n3
 edge n2 n4
 edge n1 n5
 edge n4 n5
-edge n10 n8
+edge n2 n20
 edge n8 n9
 edge n4 n8
 edge n9 n7

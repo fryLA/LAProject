@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.LayoutManager;
@@ -14,20 +15,28 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
@@ -44,7 +53,8 @@ import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 public class LayerAssignmentVisualizer extends JPanel implements ActionListener {
 
     // JFrame frame;
-
+    
+    
     /**
      * 
      */
@@ -93,11 +103,11 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     private static final int tooblarPadding = 4;
 
     // Button IDs
-    private static final String PLAY = "play";
-    private static final String PAUSE = "pause";
-    private static final String FWD = "fwd";
-    private static final String BCK = "bck";
-    private static final String RESET = "reset";
+    private final String PLAY = "play";
+    private final String PAUSE = "pause";
+    private final String FWD = "fwd";
+    private final String BCK = "bck";
+    private final String RESET = "reset";
 
     // for button enablements and stuff
     private boolean initial = true; // enabled: play, fwd, bck. disabled: pause, reset.
@@ -107,7 +117,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     private List<SimpleGraph> graphs;
 
     protected LayerAssignmentVisualizer(List<SimpleGraph> graphs) {
-
+        
         layerCnt = computeLayerCount(graphs);
 
         if (layerCnt == 0) {
@@ -209,6 +219,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
 
         // Create BoxLayout Panel
         rootPanel = new JPanel();
+        rootPanel.addMouseListener(new PopClickListener());
         rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.PAGE_AXIS));
         
         Box boxes[] = new Box[2];
@@ -235,6 +246,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         
         
         pd.setPreferredSize(new Dimension(getPreferredSize().width, 20));
+        pd.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
         layerPanel.setPreferredSize(new Dimension(getPreferredSize().width, getPreferredSize().height - 20));
         
         boxes[0].add(pd);
@@ -248,6 +260,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
 
         stepLabel = new JLabel("Step size:");
         toolbar.add(stepLabel);
+        stepSizeText = new JTextField(new Integer(1).toString());
 
         stepSlider = new JSlider(JSlider.HORIZONTAL, 0, graphs.size() - 1, 1);
         stepSlider.setToolTipText("Define step size");
@@ -266,7 +279,6 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
             }
         });
 
-        stepSizeText = new JTextField(new Integer(1).toString(), 1);
         stepSizeText.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent ke) {
@@ -275,11 +287,11 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                     return;
                 } else if (!input.matches("\\d+")) {
                     JOptionPane.showMessageDialog(null,
-                            "Error: Please enter number between 0 and " + (graphs.size() - 1) + ".", "Error Massage",
+                            "Error: Not a number. Please enter number between 0 and " + (graphs.size() - 1) + ".", "Error Massage",
                             JOptionPane.ERROR_MESSAGE);
 
                     return;
-                } else if (Integer.parseInt(input) < 0 || Integer.parseInt(input) > layerCnt) {
+                } else if (Integer.parseInt(input) < 0 || Integer.parseInt(input) > graphs.size() - 1) {
                     JOptionPane.showMessageDialog(null,
                             "Error: Please enter number between 0 and " + (graphs.size() - 1) + ".", "Error Massage",
                             JOptionPane.ERROR_MESSAGE);
@@ -351,7 +363,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         toolbar.add(nodeSizeSlider);
 
         components = new ArrayList<>(Arrays.asList(stepSlider, speedSlider, resetButton, playButton, jumpBck, jumpFwd,
-                pauseButton, speedLabel, stepLabel, nodeSizeLabel, nodeSizeSlider, toolbar));
+                pauseButton, speedLabel, stepLabel, nodeSizeLabel, nodeSizeSlider, toolbar, stepSizeText));
 
         rescaleComponents();
 
@@ -497,7 +509,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     private static final int toolbarRows = 2;
 
     private Dimension setDimensionOfToolbarComponent(int multX, int multY) {
-        return new Dimension((this.getPreferredSize().width / toolbarDivisor) * multX,
+        return new Dimension((Math.max(this.getWidth(),this.getPreferredSize().width) / toolbarDivisor) * multX,
                 ((toolbarHeight + 2 * tooblarPadding) / toolbarRows) * multY);
     }
 
@@ -510,13 +522,80 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                     comp.setPreferredSize(setDimensionOfToolbarComponent(3, 1));
                 } else if (comp instanceof JToolBar) {
                     comp.setPreferredSize(setDimensionOfToolbarComponent(toolbarDivisor, toolbarRows));
-                } else {
-                    comp.setPreferredSize(setDimensionOfToolbarComponent(2, 1));
+                } else if (comp instanceof JTextField) {
+                    comp.setPreferredSize(new Dimension(50, toolbarHeight / toolbarRows));
+                    comp.setMinimumSize(new Dimension(50, toolbarHeight / toolbarRows));
+                } else if (comp instanceof JButton) {
                 }
+                
                 comp.repaint();
             }
         }
 
+    }
+    
+    /**
+     * Save the Panel as image with the name and the type in parameters
+     *
+     * @param name
+     *            name of the file
+     * @param type
+     *            type of the file
+     */
+    public void saveImage(String name, String type) {
+        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        paint(g2);
+        try {
+            JFileChooser fileChooser = new JFileChooser("savedImages");
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                        
+                ImageIO.write(image, type, new File(selectedFile + "." + type));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    class PopUpMenu extends JPopupMenu {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+        JMenuItem anItem;
+
+        public PopUpMenu() {
+            anItem = new JMenuItem("Save as Image");
+            anItem.addActionListener(new ActionListener() {
+                
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    saveImage("image", "png");
+                    
+                }
+            });
+            add(anItem);
+        }
+
+    }
+    
+    class PopClickListener extends MouseAdapter {
+        public void mousePressed(MouseEvent e){
+            if (e.isPopupTrigger())
+                doPop(e);
+        }
+
+        public void mouseReleased(MouseEvent e){
+            if (e.isPopupTrigger())
+                doPop(e);
+        }
+
+        private void doPop(MouseEvent e){
+            PopUpMenu menu = new PopUpMenu();
+            menu.show(e.getComponent(), e.getX(), e.getY());
+        }
     }
 
 }

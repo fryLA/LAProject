@@ -65,6 +65,7 @@ public class LayerAssignmentView extends JFrame {
 
         visualizer.createView();
         visualizer.initialize();
+        tabbedPane.setSelectedComponent(visualizer);
 
     }
 
@@ -76,9 +77,11 @@ public class LayerAssignmentView extends JFrame {
         loadButton.setPreferredSize(new Dimension(width, height / 10));
         loadButton.setSize(new Dimension(width, height / 10));
         loadButton.addActionListener(new ActionListener() {
+            
             public void actionPerformed(ActionEvent ae) {
                 // Relative path to application root!
                 JFileChooser fileChooser = new JFileChooser("testGraphs");
+                
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
 
