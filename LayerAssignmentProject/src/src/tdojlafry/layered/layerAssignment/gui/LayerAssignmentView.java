@@ -18,6 +18,7 @@ import org.eclipse.elk.core.util.Pair;
 import org.eclipse.elk.graph.ElkNode;
 
 import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
+import src.tdojlafry.layered.layerAssignment.testStuff.GuiTestDataCreator;
 
 public class LayerAssignmentView extends JFrame {
 
@@ -82,7 +83,7 @@ public class LayerAssignmentView extends JFrame {
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
 
                     File selectedFile = fileChooser.getSelectedFile();
-                    ElkNode elkGraph = LayerAssignmentComputationManager.parseGraphToElkGraph(selectedFile.getPath());
+                    ElkNode elkGraph = LayerAssignmentComputationManager.parseGraphToElkGraph(selectedFile.getPath()); //GuiTestDataCreator.createSimpleLayoutGraph(200);
 
                     if (elkGraph != null) {
                         Pair<Boolean, List<SimpleGraph>> computation =

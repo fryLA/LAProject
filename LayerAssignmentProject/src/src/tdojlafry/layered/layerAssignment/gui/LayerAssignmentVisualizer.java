@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -42,13 +45,20 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
 
     // JFrame frame;
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     JPanel layerPanel;
+    JPanel rootPanel;
 
     Integer stepSize = 1;
     int currentStep = 0;
     JTextField stepSizeText;
 
     GraphDrawer gd;
+    PhaseDisplayer pd;
 
     private JSlider stepSlider;
 
@@ -63,15 +73,15 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     private JButton jumpBck;
 
     private JButton pauseButton;
-    
+
     private JLabel speedLabel;
-    
+
     private JLabel stepLabel;
-    
+
     private JLabel nodeSizeLabel;
-    
+
     private JSlider nodeSizeSlider;
-    
+
     private JToolBar toolbar;
 
     private int layerCnt;
@@ -79,7 +89,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     ArrayList<JComponent> components;
 
     private static final int toolbarHeight = 100;
-    
+
     private static final int tooblarPadding = 4;
 
     // Button IDs
@@ -105,31 +115,31 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                     JOptionPane.ERROR_MESSAGE);
         }
         this.graphs = graphs;
-        
+
         addComponentListener(new ComponentListener() {
-            
+
             @Override
             public void componentShown(ComponentEvent e) {
                 // TODO Auto-generated method stub
-                
+
             }
-            
+
             @Override
             public void componentResized(ComponentEvent e) {
                 rescaleComponents();
-                
+
             }
-            
+
             @Override
             public void componentMoved(ComponentEvent e) {
                 // TODO Auto-generated method stub
-                
+
             }
-            
+
             @Override
             public void componentHidden(ComponentEvent e) {
                 // TODO Auto-generated method stub
-                
+
             }
         });
 
@@ -143,29 +153,6 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
             }
         }
         return cnt - 1;
-    }
-
-    public void createView() {
-
-        // Create and set up the window
-        // frame = new JFrame("Layer Assignment");
-        // frame.setSize(width, height);
-        // frame.getRootPane().setSize(width, height);
-
-        // Toolkit tk = Toolkit.getDefaultToolkit();
-        // Dimension dim = tk.getScreenSize();
-
-        // int xPos = (dim.width / 2) - (frame.getWidth() / 2);
-        // int yPos = (dim.height / 2) - (frame.getHeight() / 2);
-        //
-        // frame.setLocation(xPos, yPos);
-        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //
-        // addPanels(frame);
-        addPanels();
-
-        // frame.pack();
-        // frame.setVisible(true);
     }
 
     public void update() {
@@ -208,8 +195,9 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         this.setVisible(true);
     }
 
-    private void addPanels() {
-
+    protected void createView() {
+        
+        // Sset layout of this panel
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(400, 400));
 
@@ -219,13 +207,41 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         addButtons(toolbar);
         add(toolbar, BorderLayout.PAGE_END);
 
+        // Create BoxLayout Panel
+        rootPanel = new JPanel();
+        rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.PAGE_AXIS));
+        
+        Box boxes[] = new Box[2];
+        boxes[0] = Box.createHorizontalBox();
+        boxes[1] = Box.createHorizontalBox();
+
+        boxes[0].createGlue();
+        boxes[1].createGlue();
+
+        rootPanel.add(boxes[0]);
+        rootPanel.add(boxes[1]);  
+        
+        add(rootPanel);
+
+        
         // Create graph panel
         layerPanel = new JPanel();
         GridLayout g = new GridLayout(1, 1);
         layerPanel.setLayout(g);
         layerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        
+        // Displays in which phase of the layer assignment we are
+        pd = new PhaseDisplayer(layerCnt); 
+        
+        
+        pd.setPreferredSize(new Dimension(getPreferredSize().width, 20));
+        layerPanel.setPreferredSize(new Dimension(getPreferredSize().width, getPreferredSize().height - 20));
+        
+        boxes[0].add(pd);
 
-        add(layerPanel);
+        boxes[1].add(layerPanel);
+        
+        
     }
 
     private void addButtons(JToolBar toolbar) {
@@ -258,13 +274,15 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                 if (input.isEmpty()) {
                     return;
                 } else if (!input.matches("\\d+")) {
-                    JOptionPane.showMessageDialog(null, "Error: Please enter number between 0 and " + (graphs.size()-1) + ".",
-                            "Error Massage", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "Error: Please enter number between 0 and " + (graphs.size() - 1) + ".", "Error Massage",
+                            JOptionPane.ERROR_MESSAGE);
 
                     return;
                 } else if (Integer.parseInt(input) < 0 || Integer.parseInt(input) > layerCnt) {
-                    JOptionPane.showMessageDialog(null, "Error: Please enter number between 0 and " + (graphs.size()-1) + ".",
-                            "Error Massage", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "Error: Please enter number between 0 and " + (graphs.size() - 1) + ".", "Error Massage",
+                            JOptionPane.ERROR_MESSAGE);
                     stepSizeText.setText(String.valueOf(stepSize));
                     return;
                 }
@@ -304,13 +322,13 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
             @Override
             public void stateChanged(ChangeEvent ce) {
 
-                double speed =  speedSlider.getValue();
+                double speed = speedSlider.getValue();
                 GNode.moveSteps = 70 - speed;
             }
         });
-        
+
         toolbar.add(speedSlider);
-        
+
         nodeSizeLabel = new JLabel("Size:");
         toolbar.add(nodeSizeLabel);
         nodeSizeSlider = new JSlider(JSlider.HORIZONTAL, 20, 60, 20);
@@ -324,17 +342,17 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
             @Override
             public void stateChanged(ChangeEvent ce) {
 
-                int size =  nodeSizeSlider.getValue();
+                int size = nodeSizeSlider.getValue();
                 GNode.node_height = size;
                 GNode.node_widht = size;
                 gd.update();
             }
         });
         toolbar.add(nodeSizeSlider);
-        
-        components = new ArrayList<>(Arrays.asList(stepSlider, speedSlider,
-                resetButton, playButton, jumpBck, jumpFwd, pauseButton, speedLabel, stepLabel, nodeSizeLabel, nodeSizeSlider, toolbar));
-        
+
+        components = new ArrayList<>(Arrays.asList(stepSlider, speedSlider, resetButton, playButton, jumpBck, jumpFwd,
+                pauseButton, speedLabel, stepLabel, nodeSizeLabel, nodeSizeSlider, toolbar));
+
         rescaleComponents();
 
     }
@@ -391,18 +409,20 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
 
                             @Override
                             public void run() {
+                                pd.changeText(currentStep);
                                 gd.update(graphs.get(currentStep));
 
                             }
                         });
                         try {
-                            // The next layer(s) shall only be filled after the animation of the last layer(s) is finished.
+                            // The next layer(s) shall only be filled after the animation of the last layer(s) is
+                            // finished.
                             Thread.sleep(100);
-                            while(gd.animationTimer.isRunning()) {
-                                
+                            while (gd.animationTimer.isRunning()) {
+
                                 Thread.sleep(10);
                             }
-                            Thread.sleep((long)(300));
+                            Thread.sleep((long) (300));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -431,7 +451,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                     nodes.add(node);
                 }
             }
-
+            pd.changeText(currentStep);
             gd.reset(nodes, edges, graphs.size() - 1);
             break;
         case FWD:
@@ -441,17 +461,27 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
             if (currentStep + stepSize < graphs.size()) {
                 currentStep += stepSize;
             } else {
-                enableComponents(Arrays.asList(jumpBck, resetButton, stepSizeText, stepSlider), true);
-                enableComponents(Arrays.asList(playButton, jumpFwd, pauseButton), false);
                 currentStep = graphs.size() - 1;
             }
+            pd.changeText(currentStep);
             gd.update(graphs.get(currentStep));
+            if (currentStep == graphs.size() - 1) {
+                enableComponents(Arrays.asList(jumpBck, resetButton, stepSizeText, stepSlider), true);
+                enableComponents(Arrays.asList(playButton, jumpFwd, pauseButton), false);
+            }
             break;
         case BCK:
-            enableComponents(Arrays.asList(playButton, jumpBck, jumpFwd, resetButton, stepSizeText, stepSlider), true);
+            enableComponents(Arrays.asList(playButton, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
-            gd.update(graphs.get(Math.max(currentStep - stepSize, 0)));
+            
             currentStep = Math.max(currentStep - stepSize, 0);
+            pd.changeText(currentStep);
+            gd.update(graphs.get(currentStep));
+            if (currentStep == 0) {
+                enableComponents(Arrays.asList(jumpBck), false);
+            } else {
+                enableComponents(Arrays.asList(jumpBck), true);
+            }
             break;
         }
 
@@ -470,7 +500,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         return new Dimension((this.getPreferredSize().width / toolbarDivisor) * multX,
                 ((toolbarHeight + 2 * tooblarPadding) / toolbarRows) * multY);
     }
-    
+
     private void rescaleComponents() {
         for (JComponent comp : components) {
             if (comp != null) {
@@ -478,16 +508,15 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                     comp.setPreferredSize(setDimensionOfToolbarComponent(5, 1));
                 } else if (comp instanceof JLabel) {
                     comp.setPreferredSize(setDimensionOfToolbarComponent(3, 1));
-                } else if (comp instanceof JToolBar){
+                } else if (comp instanceof JToolBar) {
                     comp.setPreferredSize(setDimensionOfToolbarComponent(toolbarDivisor, toolbarRows));
-                }
-                else {
+                } else {
                     comp.setPreferredSize(setDimensionOfToolbarComponent(2, 1));
                 }
                 comp.repaint();
             }
         }
-        
+
     }
 
 }
