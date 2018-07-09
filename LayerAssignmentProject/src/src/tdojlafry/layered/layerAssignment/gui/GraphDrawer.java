@@ -46,7 +46,7 @@ public class GraphDrawer extends JPanel implements ActionListener {
     private List<Node> newlyAssignedNodes;
     private List<Edge> edgesToBeRemovedfromMiniGraph;
 
-    static final int PADDING = (int) Math.max(GNode.NODE_HEIGHT, GNode.NODE_WIDTH);
+    static final int PADDING = (int) Math.max(GNode.node_height, GNode.node_widht);
 
     double layerWidth;
     double layerHeight;
@@ -56,11 +56,14 @@ public class GraphDrawer extends JPanel implements ActionListener {
     private HashMap<Integer, Integer> nodesInLayer;
 
     public GNode gNodes[];
-    private Timer animationTimer;
+    Timer animationTimer;
     private int actualWidth = 150;
     private int actualHeight = 150;
+    
 
     private int visibleLayers = -1;
+
+    protected int timerDelay = 10;
 
     protected GraphDrawer(List<Node> nodes, List<Edge> edges, int layerCnt, HashMap<Integer, Integer> nodesInLayer) {
         this.layerCnt = layerCnt;
@@ -108,10 +111,11 @@ public class GraphDrawer extends JPanel implements ActionListener {
                     node.isDummy());
         }
 
-        animationTimer = new Timer(10, this);
+        animationTimer = new Timer(timerDelay, this);
         // animationTimer.start();
 
     }
+    
 
     /**
      * Save the Panel as image with the name and the type in parameters
@@ -248,10 +252,10 @@ public class GraphDrawer extends JPanel implements ActionListener {
                 } else {
                     maxLayer = Math.max(maxLayer, node.getLayer());
                     Rectangle2D layerRect = layers.get(node.layer);
-                    gNode.targetPosition.x = layerRect.getCenterX() - (GNode.NODE_WIDTH / 2);
+                    gNode.targetPosition.x = layerRect.getCenterX() - (GNode.node_widht / 2);
 
                     double d = (layerRect.getHeight()) / (nodesInLayer.get(node.layer) + 1);
-                    gNode.targetPosition.y = layerRect.getMinY() + ((node.posInlayer + 1) * d - GNode.NODE_HEIGHT / 2);
+                    gNode.targetPosition.y = layerRect.getMinY() + ((node.posInlayer + 1) * d - GNode.node_height / 2);
                     if (gNode.isDummy()) {
                         gNode.currentPosition.x = gNode.targetPosition.x;
                         gNode.currentPosition.y = gNode.targetPosition.y;
@@ -263,6 +267,10 @@ public class GraphDrawer extends JPanel implements ActionListener {
         repaint();
         animationTimer.start();
 
+    }
+    
+    protected void update() {
+        update(this.currNodes, this.currEdges);
     }
 
     protected void update(SimpleGraph newGraph) {

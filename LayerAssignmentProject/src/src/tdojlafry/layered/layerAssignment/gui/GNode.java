@@ -6,10 +6,12 @@ public class GNode {
     public final static double ABSTRACT_WIDTH = 100;
     public final static double ABSTRACT_HEIGHT = 100;
     
-    public final static double NODE_WIDTH = 20;
-    public final static double NODE_HEIGHT = 20;
+    public static double node_widht = 20;
+    public static double node_height = 20;
     
-    private final static double MOVE_STEPS = 10;
+    static final int MAX_SPEED = 60;
+    
+    static double moveSteps = 10;
     private final static double MOVE_SNAPIN = 1;
     
     private String label = "";
@@ -85,7 +87,7 @@ public class GNode {
         double angle = Math.atan2(dy, dx);
 
         double d = Math.sqrt(dx * dx + dy * dy);
-        double acc = d / MOVE_STEPS;
+        double acc = d / moveSteps;
 
         currentPosition.x += acc * Math.cos(angle);
         currentPosition.y += acc * Math.sin(angle);     

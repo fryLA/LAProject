@@ -23,8 +23,8 @@ class ShapeProvider {
 
     protected static void drawArrow(Graphics g1, Edge e, GraphDrawer gd) {
 
-        double halfWidth = GNode.NODE_WIDTH / 2;
-        double halfHeight = GNode.NODE_HEIGHT / 2;
+        double halfWidth = GNode.node_widht / 2;
+        double halfHeight = GNode.node_height / 2;
 
         GNode startingNode = gd.gNodes[gd.currNodes.indexOf(e.startNode)];
         GNode targetNode = gd.gNodes[gd.currNodes.indexOf(e.endNode)];
@@ -81,38 +81,38 @@ class ShapeProvider {
         if (node.moving()) {
             GradientPaint redGradiant = new GradientPaint((int) node.currentPosition.x,
                     (int) node.currentPosition.y, new Color(255, 238, 230),
-                    (int) (node.currentPosition.x + GNode.NODE_WIDTH / 2),
-                    (int) (node.currentPosition.y + GNode.NODE_HEIGHT / 2), new Color(255, 150, 102),
+                    (int) (node.currentPosition.x + GNode.node_widht / 2),
+                    (int) (node.currentPosition.y + GNode.node_height / 2), new Color(255, 150, 102),
                     false);
             g.setPaint(redGradiant);
             
             shape = new RoundRectangle2D.Double(node.currentPosition.x,
-                    node.currentPosition.y, GNode.NODE_WIDTH, GNode.NODE_HEIGHT, 5, 5);
+                    node.currentPosition.y, GNode.node_widht, GNode.node_height, 5, 5);
         } else {
             if (node.dummy) {
                 GradientPaint grayGradient = new GradientPaint((int) node.currentPosition.x,
                         (int) node.currentPosition.y , new Color(230, 230, 230),
-                        (int) (node.currentPosition.x + GNode.NODE_WIDTH / 2),
-                        (int) (node.currentPosition.y + GNode.NODE_HEIGHT / 2),  new Color(242, 242, 242),
+                        (int) (node.currentPosition.x + GNode.node_widht / 2),
+                        (int) (node.currentPosition.y + GNode.node_height / 2),  new Color(242, 242, 242),
                         false);
                 
                 g.setPaint(grayGradient);
                 
                 shape = new Ellipse2D.Double(node.currentPosition.x,
-                    node.currentPosition.y, GNode.NODE_WIDTH, GNode.NODE_HEIGHT);
+                    node.currentPosition.y, GNode.node_widht, GNode.node_height);
                 
             } else {
                 
                 GradientPaint kakhiGradient = new GradientPaint((int) node.currentPosition.x,
                         (int) node.currentPosition.y , new Color(183, 183, 149),
-                        (int) (node.currentPosition.x + GNode.NODE_WIDTH / 2),
-                        (int) (node.currentPosition.y + GNode.NODE_HEIGHT / 2), new Color(224, 224, 209),
+                        (int) (node.currentPosition.x + GNode.node_widht / 2),
+                        (int) (node.currentPosition.y + GNode.node_height / 2), new Color(224, 224, 209),
                         false);
                 
                 g.setPaint(kakhiGradient);
                 
                 shape = new RoundRectangle2D.Double(node.currentPosition.x,
-                        node.currentPosition.y, GNode.NODE_WIDTH, GNode.NODE_HEIGHT, 5, 5);
+                        node.currentPosition.y, GNode.node_widht, GNode.node_height, 5, 5);
                 
             }
 
