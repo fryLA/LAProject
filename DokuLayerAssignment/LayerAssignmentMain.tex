@@ -37,7 +37,12 @@
  
 \section*{Subject}
 
-We aim to visualize the \textit{Layer Assignment} phase of the \textit{Layered} layout algorithm step by step.
+%We aim to visualize the \textit{Layer Assignment} phase of the \textit{Layered} layout algorithm step by step.
+Unser Ziel ist es, die  \textit{Layer Assingment} Phase des \textit{Layered} layout Algorithmuses zu visualisieren. 
+Hierbei gibt die Graphische Schittstelle dem Benutzer die Möglichkeit, den Algorithums Schritt für Schritt betrachtet. 
+So soll  der Benutzer durch Ausprobieren ein intuitives Verständniss für den Algorithmus entwickeln. Wichtig ist uns
+dabei die verständliche Visualisierung des Algorithmuses, so wie eine intuitiv zu bedienende GUI. Weniger wichtig ist
+uns allerdings eine gute Performance bei sehr großen Graphen.
 
 \todo[inline]{write summarizing stuff here, add source of layered paper}
 
@@ -47,7 +52,10 @@ here should be some general information about things we do.
 
 \begin{enumerate}
     \item first we parse
-    \item then we apply the algorithm
+    \item Als nächstes wenden wir \textit{Layer Assingment} Algorithmus auf den Elkgraphen an. Hierbei erstellen wir nach
+    jedem Schritt einen SimpleGraph (vereinfachte Graphenstruktur, die nur die notwendigen Informeationen für die
+    Visualisierung enthällt) aus dem Elkgraphen. Nachdem der \textit{Layer Assingment} Algorithmus fertig ist, geben wir 
+    eine Liste dieser SimpleGraphs an die Visualisierung weiter.
     \item then we visualize
 \end{enumerate}
 

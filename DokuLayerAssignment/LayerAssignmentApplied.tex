@@ -1,7 +1,7 @@
 
 
 \subsection*{Layer Assignment Algorithm}
-Die Klasse LayerAssignment enthällt eine Reihe hilfreicher Funktionen, die Wichtigste ist allerdings die Methode assignLayers. assignLayers nimmt einen ElkGraphen, führt das Layerassignment an ihm durch und gibt eine Bearbeitungshistorie in Form einer ArrayList vom typen MyGraph zurück. Wobei MyGraph eine von uns entwickelte vereinfachte Graphenstruktur ist. Jeder MyGraph in der Liste stellt also einen "snapshot" aus dem Layerassingments des Graphen dar.
+Die Klasse LayerAssignment enthällt eine Reihe hilfreicher Funktionen, die Wichtigste ist allerdings die Methode assignLayers. assignLayers nimmt einen ElkGraphen, führt das Layerassignment an ihm durch und gibt eine Bearbeitungshistorie in Form einer ArrayList vom typen SimpleGraph zurück. Wobei SimpleGraph eine von uns entwickelte vereinfachte Graphenstruktur ist. Jeder SimpleGraph in der Liste stellt also einen Momentaufnahme aus dem Layerassingment des Graphen dar.
 Durch Seiteneffekte beinflusst die Methode auch den eingegebenen ElkGraphen, so dass er am Ende der Methode als vollständig gelayerter Graph vorliegt. Dazu haben wir jedem Knoten 3 Propertys gegeben:
  LAYER: Ein Integer wert größer oder gleich 1, der das Layer angibt, in dem sich der Knoten befindet
 
@@ -12,10 +12,7 @@ POSITION\_IN\_LAYER: Gibt an, an welcher Stelle im Layer sich der Knoten befinde
 Beim einfügen der Dummyknoten geht der Algorithmus wie folgt vor:
 Wenn eine Kante k ein Layer übersprngt, fügen wir für jedes Layer zwischen den Layern des Startknotens von k und des Endknotens von k einen neuen Dummyknoten in dem jeweiligen Layer ein. Nun fügen wir Dummykanten so ein, dass von jedem Dummyknoten eine Dummykante zum Dummyknoten im nächsthöheren Layer führt. Desweiteren soll eine Dummykante vom höchsten Dummyknoten zum Zielknotne von k führen. Zuletzt wird noch der Zielknoten von k auf den Dummyknoten im Layer direkt über dem Startknoten von k gesetzt.
 
-(Hier vlt zeichnung)
-
-
-MyGraph ist eine vereinfachte Graphenstruktur. Sie enthällt nur eine Liste von Knoten und eine Liste von Kanten.  
+SimpleGraph ist eine vereinfachte Graphenstruktur. Sie enthällt nur eine Liste von Knoten und eine Liste von Kanten.  Wobei diese auch die 3 Propertys beinhalten.
 
 
 
