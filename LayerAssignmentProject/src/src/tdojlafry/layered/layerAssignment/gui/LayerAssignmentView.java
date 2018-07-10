@@ -37,8 +37,8 @@ public class LayerAssignmentView extends JFrame {
 
     private JTabbedPane tabbedPane;
 
-    private static int width = 500;
-    private static int height = 500;
+    private static int width = 600;
+    private static int height = 600;
     
     static String reloadEvent = "reload file";
     
@@ -67,6 +67,7 @@ public class LayerAssignmentView extends JFrame {
 
         setLocation(xPos, yPos);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Layer Assignment Applied");
 
         tabbedPane = new JTabbedPane();
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -87,7 +88,7 @@ public class LayerAssignmentView extends JFrame {
         
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, textPanel, visualizer);
         splitPane.setOneTouchExpandable(true);
-        splitPane.setDividerLocation(Math.max(getWidth(), getPreferredSize().width) -  400);
+        splitPane.setDividerLocation(Math.max(getWidth(), getPreferredSize().width) -  500);
         splitPane.setResizeWeight(0.8);
         tabbedPane.addTab(file.getName(), splitPane);
 
@@ -152,7 +153,7 @@ public class LayerAssignmentView extends JFrame {
         
         String path = "";
         private String storeAllString="";
-        private JButton saveButton = new JButton("Save");
+        private JButton saveButton = new JButton("Save/Reload");
         
         protected TextPanel(String p) {
             setLayout(new BorderLayout());

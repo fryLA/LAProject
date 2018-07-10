@@ -2,8 +2,17 @@ node n1
 node n2
 node n3
 node n4
+node n6
+node n5
+node n7
 
+edge n1 n6
 edge n1 n2
+edge n1 n7
 edge n2 n3
+edge n7 n6
+edge n2 n6
+edge n5 n6
 edge n3 n4
 edge n1 n4
+

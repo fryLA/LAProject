@@ -16,7 +16,11 @@ public class LayerAssignment {
     
     public LayerAssignment() {
         
-//        seed = (int)System.currentTimeMillis();
+        // compute a random seed for random initail node positions
+        seed = (int)System.currentTimeMillis();
+        int a = seed;
+        a = a /100000;
+        seed = seed - a * 100000;
         
     }
 

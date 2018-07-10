@@ -1,5 +1,5 @@
 \documentclass[12pt]{book}
-\usepackage[a4paper,left=1cm,right=1cm,top=3cm,bottom=4cm,bindingoffset=5mm]{geometry}
+\usepackage[a4paper,left=2cm,right=1cm,top=3cm,bottom=4cm,bindingoffset=5mm]{geometry}
 \usepackage{fancyhdr}
 %\usepackage{lscape} %für Querfromat
 \usepackage{cancel} %um was in durchzustreichen
@@ -34,93 +34,63 @@
 \rhead{ Thomas Dost, Jonas Lange, Francesca Rybicki}
 
 \begin{document}
- 
-\section*{Subject}
-
-%We aim to visualize the \textit{Layer Assignment} phase of the \textit{Layered} layout algorithm step by step.
-Unser Ziel ist es, die  \textit{Layer Assingment} Phase des \textit{Layered} layout Algorithmuses zu visualisieren. 
-Hierbei gibt die Graphische Schittstelle dem Benutzer die Möglichkeit, den Algorithums Schritt für Schritt betrachtet. 
-So soll  der Benutzer durch Ausprobieren ein intuitives Verständniss für den Algorithmus entwickeln. Wichtig ist uns
-dabei die verständliche Visualisierung des Algorithmuses, so wie eine intuitiv zu bedienende GUI. Weniger wichtig ist
-uns allerdings eine gute Performance bei sehr großen Graphen.
-
-\todo[inline]{write summarizing stuff here, add source of layered paper}
-
-\section*{Our Approach}
-
-here should be some general information about things we do.
-
-\begin{enumerate}
-    \item first we parse
-    \item Als nächstes wenden wir \textit{Layer Assingment} Algorithmus auf den Elkgraphen an. Hierbei erstellen wir nach
-    jedem Schritt einen SimpleGraph (vereinfachte Graphenstruktur, die nur die notwendigen Informeationen für die
-    Visualisierung enthällt) aus dem Elkgraphen. Nachdem der \textit{Layer Assingment} Algorithmus fertig ist, geben wir 
-    eine Liste dieser SimpleGraphs an die Visualisierung weiter.
-    \item then we visualize
-\end{enumerate}
-
-\todo[inline]{write general information on your topic here, e.g what is you input, what is yout output, any methods you use.. but don't go into detail yet. this will happen in your very own chapter }
-
-\section*{Approach in detail}
-
-\todo[inline]{write a subchapter about your topic. go into details, if there is something you really want to mention, because its cool or so.. especially try to use stuff from lecture (sources, technical terms, etc. ) if you want to give reasons for your solution. 
-
-Further: explain the input and output formats of your special topic -> iLearn has some MUSTs listed here, be sure you considered those.}
-
-\newpage
-\input{Parsing_Documentation}
-\newpage
-\input{LayerAssignmentApplied}
-\newpage
-\input{Visualization}
-
-
-
-\section*{Schedule}
-
-
-\begin{tabular}{|p{2cm}|*3{p{4.5cm}|}}
-   
-    \hline
-    Date & Thomas & Jonas & Francesca \\
-     \hline
-     \hline
-      18.6.18 & - & - & Window mockup (no functionality) \\
-       \hline
-    18.6.18 & Parsing finished (no cycle chek)& - & - \\
-    \hline
-     18.6.18 & - & First approach for Layer assignment & - \\
-    \hline
-   19.6.18 & \multicolumn{3}{|c|}{First Deadline/Demo} \\
-    \hline \hline
-     30.6.18 & - & - & Animations applied to LA algorithm \\
-   \hline
-     30.6.18 & - & Added some tests & - \\
-   \hline
-     30.6.18 & Cycle check & - & - \\
-   \hline
-   7.7.18 & \multicolumn{3}{|c|}{Complete Documentation} \\
-    \hline
-     9.7.18 &\multicolumn{3}{|c|}{Last Checks?} \\
-     \hline
-     10.7.18 &\multicolumn{3}{|c|}{Finished} \\
     
-    \hline
-\end{tabular}
-
-
-\todo[inline]{Daten eintragen}
-
-\newpage
-\section*{Technical Details}
-
-\todo[inline]{things like class diagrams maybe?}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{images/Component_Diagram1.jpg}
-\end{figure}
-
-
+    \section*{Subject}
+    
+    %We aim to visualize the \textit{Layer Assignment} phase of the \textit{Layered} layout algorithm step by step.
+    Unser Ziel ist es, die  \textit{Layer Assignment} Phase des \textit{Layered} Layout Algorithmus zu visualisieren. 
+    Hierbei gibt die Graphische Schnittstelle dem Benutzer die Möglichkeit, den Algorithmus Schritt für Schritt betrachtet. 
+    So soll der Benutzer durch Ausprobieren ein intuitives Verständnis für den Algorithmus entwickeln. Wichtig ist uns
+    dabei, die verständliche Visualisierung des Algorithmus, so wie eine intuitiv zu bedienende GUI. Weniger wichtig ist
+    uns eine gute Performance bei sehr großen Graphen, da für das Verständnis der \textit{Layer Assignment} Phase kleinere Graphen besser geeignet sind.
+    
+    
+    
+    \section*{Technische Umsetzung}
+    
+    Die technische Umsetzung ist in drei Schritte unterteilt:
+    
+    \begin{enumerate}
+        \item first we parse\todo[inline]{THOMAS!! }
+        \item Als nächstes wenden wir den \textit{Layer Assignment} Algorithmus auf den Elkgraphen an. Hierbei erstellen wir nach
+        jedem Schritt einen SimpleGraph (vereinfachte Graphenstruktur, die nur die notwendigen Informeationen für die
+        Visualisierung enthällt) aus dem Elkgraphen. Nachdem der \textit{Layer Assignment} Algorithmus fertig ist, geben wir 
+        eine Liste dieser SimpleGraphs an die Visualisierung weiter.
+        \item In der Visualisierung wird in jedem Schritt ein neuer SimpleGraph aus der Ausgabe des Algorithmus aus Schritt 2 geladen. Die Unterschiede, die zwischen zwei SimpleGraphs bestehen, werden dabei hervorgehoben. So ist es dem Benutzer möglich die Auswirkungen des Algorithmus in jedem Schritt nachzuvollziehen.
+    \end{enumerate}
+    
+    Wie in folgendem Komponentendiagramm dargestellt, existieren Schnittstellen zwischen den einzelnen Berechnungsschritten, die die Datenweitergabe erlauben und an denen Überprüfungen vorgenommen werden, die sicher stellen, dass die weitere Berechnung möglich ist.
+    
+    
+    \begin{figure}[ht!]
+        \centering
+        \includegraphics[width=\textwidth]{images/Component_Diagram1.jpg}
+    \end{figure}
+    
+    
+    
+    \input{Parsing_Documentation}
+    
+    \input{LayerAssignmentApplied}
+    
+    
+    
+    
+    
+    \section*{User Guide}
+    \input{UserGuide}
+    
+    
+    
+    
+    \section*{Visualisierung}
+    \input{Visualization}
+    
+    
+    
+    
+    
+    
 \end{document}
 
 
