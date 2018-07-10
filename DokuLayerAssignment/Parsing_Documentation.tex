@@ -3,8 +3,9 @@
 
 
 \subsection*{Parsing}
-Die Parsing-Klasse ist dafür zustädnig das eigens erstelle Textformate einzulesen
-und in einen ElkGraph umzuwandeln
+Die Parsing-Klasse ist dafür zuständig das eigens erstelle Textformate einzulesen
+und in einen ElkGraph umzuwandeln, zusätlich wird der eingelesene Graph auf Kreisfreiheit überprüft
+da der Layer-Assignment-Algorithmus nur für kreisfreie Graphen definiert ist.
 
 \subsubsection*{Syntax}
 Eine Node hinzufügen:
@@ -22,7 +23,7 @@ weiter muss jeder Knoten der von einer edge benutzt wird vorher mit dem \textit{
 Parser.parse(<filepath>)\newline
 Return: null falls ein fehler auftrat, sonst ein ElkGraph
 
-\subsubsection*{How to use the parser}
+\subsubsection*{Benutzung des Parsers}
 try 
 \{\newline
 ElkNode testGraph = Parser.parse("testGraphs/testfile.txt");
@@ -38,7 +39,7 @@ catch (Exception e)
 \}
 
 
-\subsubsection*{Example}
+\subsubsection*{Beispiel}
 node n1 \newline
 node n2 \newline
 node n3 \newline

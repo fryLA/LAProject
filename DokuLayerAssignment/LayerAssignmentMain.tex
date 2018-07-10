@@ -51,7 +51,8 @@
     Die technische Umsetzung ist in drei Schritte unterteilt:
     
     \begin{enumerate}
-        \item first we parse\todo[inline]{THOMAS!! }
+        \item In diesem ersten Schritt wird ein vom Benutzer erstellter Graph eingelesen und auf Kreisfreiheit überorüft,
+        falls Fehler auftreten wird eine Error-Text-Box angezeigt, falls nicht wird ein layerbarer ElkGraph zurückgegeben.
         \item Als nächstes wenden wir den \textit{Layer Assignment} Algorithmus auf den Elkgraphen an. Hierbei erstellen wir nach
         jedem Schritt einen SimpleGraph (vereinfachte Graphenstruktur, die nur die notwendigen Informeationen für die
         Visualisierung enthällt) aus dem Elkgraphen. Nachdem der \textit{Layer Assignment} Algorithmus fertig ist, geben wir 
