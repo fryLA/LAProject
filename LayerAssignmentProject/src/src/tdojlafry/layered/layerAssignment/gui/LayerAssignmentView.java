@@ -34,7 +34,7 @@ import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
  * 
  * Main Frame of the visualization.
  * 
- * Holda a Tabbed Pane "tabbedPane" all loaded graphs. Holds the Load Button
+ * Holds a Tabbed Pane "tabbedPane" all loaded graphs. Holds the Load Button
  * 
  * 
  * The "tabbedPane" holds a SplitPane which itself holds a textual representation on the left and a graphical
@@ -166,6 +166,7 @@ public class LayerAssignmentView extends JFrame {
 
         protected TextPanel(String p) {
             setLayout(new BorderLayout());
+            setPreferredSize(new Dimension(width / 6, height - 50));
             path = p;
             fileRead();
             panels();
@@ -193,8 +194,8 @@ public class LayerAssignmentView extends JFrame {
 
         private void panels() {
             JPanel panel = new JPanel(new GridLayout(1, 1));
+            panel.setPreferredSize(new Dimension(width / 6, height - 200));
             panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-            // JTextArea textArea = new JTextArea(storeAllString,0,70);
             JScrollPane scrollBarForTextArea = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             panel.add(scrollBarForTextArea);

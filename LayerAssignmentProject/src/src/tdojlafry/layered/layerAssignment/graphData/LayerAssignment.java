@@ -20,7 +20,7 @@ public class LayerAssignment {
         seed = (int)System.currentTimeMillis();
         int a = seed;
         a = a /100000;
-        seed = seed - (int)( Math.signum(a)*(a * 100000));
+        seed = seed - a * 100000;
         
     }
 

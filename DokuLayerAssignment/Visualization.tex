@@ -16,15 +16,24 @@ Momentan gibt es einen Unterordner \textit{savedImages} im Projekt. Der Inhalt d
 
 \subsection*{User Interface}
 \begin{enumerate}
-    \item[Die View] Aufteilung
-    \item[Slider und Button] Der \textit{Step Size} Slider startet aus Ästhetikgründen für die Beschriftungen bei 0. Wird hier die 0 ausgewählt, wird kein Update an der Visualisierung vorgenommen. Die Obergrenze ist die Anzahl der möglichen  Berechnungsschritte. Befindet sich die Berechnung bereits in einem fortgeschrittenen Berechnungsschritt, wird beim Modifizieren des Sliders überprüft ob die Maximale Anzahl der Berechnungsschritte nicht überschritten wird. Dieser Slider bietet also eine zusätzliche Möglichkeit zum \textit{Speed} Slider die Animation des Algorithmus zu beschleunigen. Um die Anzahl der Schritte genau angeben und ablesen zu können wurde außerdem ein Textfeld hinzugefügt, welches mit dem Slider Synchronisiert ist. Der Slider kann nicht verwendet werden während die Animation des Algorithmus, die durch den \textit{Play} Button gestartet wurde, läuft. 
+    \item[Slider und Button:] Der \textit{Step Size} Slider startet aus Ästhetikgründen für die Beschriftungen bei 0. Wird hier die 0 ausgewählt, wird kein Update an der Visualisierung vorgenommen. Die Obergrenze ist die Anzahl der möglichen  Berechnungsschritte. Befindet sich die Berechnung bereits in einem fortgeschrittenen Berechnungsschritt, wird beim Modifizieren des Sliders überprüft ob die Maximale Anzahl der Berechnungsschritte nicht überschritten wird. Dieser Slider bietet also eine zusätzliche Möglichkeit zum \textit{Speed} Slider die Animation des Algorithmus zu beschleunigen. Um die Anzahl der Schritte genau angeben und ablesen zu können wurde außerdem ein Textfeld hinzugefügt, welches mit dem Slider Synchronisiert ist. Der Slider kann nicht verwendet werden während die Animation des Algorithmus, die durch den \textit{Play} Button gestartet wurde, läuft. 
     
     Der im \textit{Speed} Slider angegebene Wert definiert, wie viele Schritte die Knoten zwischen ihrer Start und Zielposition zurücklegen sollen. Ist der Wert des Sliders hoch, so erreichen die Knoten ihre Zielposition in weniger Schritten und umgekehrt. Die Geschwindigkeit ist über die Anzahl der Berechnungszyklen definiert, da wir erreichen wollen, dass die  Knoten alle zum (fast) gleichen Zeitpunkt ihre Zielposition erreichen, unabhängig von der Strecke, die sie dafür zurücklegen müssen. Obere und Untere Grenzen wurden so gewählt, dass die Animation flüssig läuft und nachvollziehbar bleibt.
     
     Button und Slider verfügen über Tooltips, um die Bedienung zu vereinfachen.
     
-    \item[Toolbar] Die Elemente für die Justierung und Steuerung der Visualisierung sind in einer Toolbar zusammengefasst. Das hat den Vorteil, dass man diese per \textit{drag and drop} aus dem Fester heraus- und auch wieder hineinziehen kann.
+    \item[Toolbar:] Die Elemente für die Justierung und Steuerung der Visualisierung sind in einer Toolbar zusammengefasst. Das hat den Vorteil, dass man diese per \textit{drag and drop} aus dem Fester heraus- und auch wieder hineinziehen kann.
     
 \end{enumerate}
+
+\subsection*{Animation}
+
+
+
+Die Animation wird über Updates und einen Timer ausgeführt. Bevor der Timer gestartet wird erhält jeder Knoten eine neue Zielposition. Wird der Timer gestartet, bewegt sich jeder Knoten auf seine Zielposition zu bis er diese erreicht hat. Hierbei wird eine Updatefunktion für die Positionierung der Knoten entsprechend häufig durch den Timerevents ausgelöst. In jedem Timerevent wird die View neu gezeichnet. Das heißt die Kanten, deren Positionen von ihren Start- und Zielknoten abhängen, werden ebenfalls mit den Knoten Bewegt, was zu einer flüssig ablaufenden Animation führt.
+
+Wurde der \textit{Play} Button gedrückt, so wird ein Thread gestartet, der für jeden Schritt die Knotenpositionen erneuert und den Timer für die Updatefunktion startet. Dieser Thread wartet darauf, dass der Timer nicht mehr aktiv ist bevor er den Schritt der Berechnung ausführt.
+
+Geht man jedoch Schrittweise durch den Algorithmus, indem mal den \textit{Forward} oder \textit{Backward} Button drückt, so kann man den nächsten Schritt bereits ausführen, während die Animation noch läuft. An dieser Stelle erschien es uns aus rechentechnischen Gründen nicht sinnvoll per buisy waiting o.Ä. das Ende der Animation abzuwarten, bevor die Button wieder ansprechbar sind.
 
 
