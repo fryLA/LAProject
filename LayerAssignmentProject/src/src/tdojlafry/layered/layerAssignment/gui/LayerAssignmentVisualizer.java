@@ -430,7 +430,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                             // The next layer(s) shall only be filled after the animation of the last layer(s) is
                             // finished.
                             Thread.sleep(100);
-                            while (gd.animationTimer.isRunning()) {
+                            while (gd.animationTimer.isRunning() || gd.showChangesTimer.isRunning()) {
 
                                 Thread.sleep(10);
                             }

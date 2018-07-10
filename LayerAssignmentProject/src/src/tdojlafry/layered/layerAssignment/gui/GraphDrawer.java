@@ -41,10 +41,9 @@ public class GraphDrawer extends JPanel implements ActionListener {
      */
     private static final long serialVersionUID = 8786962247310354215L;
     List<Node> currNodes;
+    List<Node> lastNodes = new ArrayList<>();
     private List<Edge> currEdges;
-
-    private List<Node> newlyAssignedNodes;
-    private List<Edge> edgesToBeRemovedfromMiniGraph;
+    private List<Edge> edgesToBeRemovedfromMiniGraph= new ArrayList<Edge>();;
 
     static final int PADDING = (int) Math.max(GNode.node_height, GNode.node_widht);
 
@@ -57,10 +56,10 @@ public class GraphDrawer extends JPanel implements ActionListener {
 
     public GNode gNodes[];
     Timer animationTimer;
+    Timer showChangesTimer;
     private int actualWidth = 150;
     private int actualHeight = 150;
     
-
     private int visibleLayers = -1;
 
     protected int timerDelay = 10;
@@ -73,13 +72,10 @@ public class GraphDrawer extends JPanel implements ActionListener {
         this.nodesInLayer = nodesInLayer;
 
 
-//        this.addMouseListener(new PopClickListener());
         this.addComponentListener(new ComponentListener() {
 
             @Override
             public void componentShown(ComponentEvent e) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
@@ -90,19 +86,13 @@ public class GraphDrawer extends JPanel implements ActionListener {
 
             @Override
             public void componentMoved(ComponentEvent e) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void componentHidden(ComponentEvent e) {
-                // TODO Auto-generated method stub
-
             }
         });
 
-        newlyAssignedNodes = new ArrayList<Node>();
-        edgesToBeRemovedfromMiniGraph = new ArrayList<Edge>();
 
         gNodes = new GNode[nodes.size()];
         for (int i = 0; i < nodes.size(); i++) {
@@ -112,79 +102,10 @@ public class GraphDrawer extends JPanel implements ActionListener {
         }
 
         animationTimer = new Timer(timerDelay, this);
-        // animationTimer.start();
 
     }
     
 
-//    /**
-//     * Save the Panel as image with the name and the type in parameters
-//     *
-//     * @param name
-//     *            name of the file
-//     * @param type
-//     *            type of the file
-//     */
-//    public void saveImage(String name, String type) {
-//        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-//        Graphics2D g2 = image.createGraphics();
-//        paint(g2);
-//        try {
-//            JFileChooser fileChooser = new JFileChooser("savedImages");
-//            int returnValue = fileChooser.showOpenDialog(null);
-//            if (returnValue == JFileChooser.APPROVE_OPTION) {
-//                File selectedFile = fileChooser.getSelectedFile();
-//                        
-//                ImageIO.write(image, type, new File(selectedFile + "." + type));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    class PopUpMenu extends JPopupMenu {
-//        /**
-//         * 
-//         */
-//        private static final long serialVersionUID = 1L;
-//        JMenuItem anItem;
-//
-//        public PopUpMenu() {
-//            anItem = new JMenuItem("Save as Image");
-//            anItem.addActionListener(new ActionListener() {
-//                
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    saveImage("image", "png");
-//                    
-//                }
-//            });
-//            add(anItem);
-//        }
-//
-//    }
-//    
-//    class PopClickListener extends MouseAdapter {
-//        public void mousePressed(MouseEvent e){
-//            if (e.isPopupTrigger())
-//                doPop(e);
-//        }
-//
-//        public void mouseReleased(MouseEvent e){
-//            if (e.isPopupTrigger())
-//                doPop(e);
-//        }
-//
-//        private void doPop(MouseEvent e){
-//            PopUpMenu menu = new PopUpMenu();
-//            menu.show(e.getComponent(), e.getX(), e.getY());
-//        }
-//    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(150, 150);
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -226,7 +147,11 @@ public class GraphDrawer extends JPanel implements ActionListener {
 
         // EDGES
         for (Edge edge : currEdges) {
-            ShapeProvider.drawArrow(g, edge, this);
+            ShapeProvider.drawArrow(g, edge, this, false);
+        }
+        
+        for (Edge edge : edgesToBeRemovedfromMiniGraph) {
+            ShapeProvider.drawArrow(g, edge, this, true);
         }
 
         // NODES
@@ -239,10 +164,74 @@ public class GraphDrawer extends JPanel implements ActionListener {
     }
 
     private void update(List<Node> nodes, List<Edge> edges) {
+        computeDiffs(nodes, edges);
+        
+        showNextChanges();
+//        currEdges = edges;
+//        currNodes = nodes;
+//        int maxLayer = -1;
+//
+//        for (int i = 0; i < gNodes.length; i++) {
+//            GNode gNode = gNodes[i];
+//            if (isUsed(i) || !gNode.isDummy()) {
+//                Node node = nodes.get(i);
+//                if (node.layer == -1) {
+//                    gNode.setTargetPosition(node.position.x, node.position.y / MINIGRAPH_AREA_DIVISOR);
+//                } else {
+//                    maxLayer = Math.max(maxLayer, node.getLayer());
+//                    Rectangle2D layerRect = layers.get(node.layer);
+//                    gNode.targetPosition.x = layerRect.getCenterX() - (GNode.node_widht / 2);
+//
+//                    double d = (layerRect.getHeight()) / (nodesInLayer.get(node.layer) + 1);
+//                    gNode.targetPosition.y = layerRect.getMinY() + ((node.posInlayer + 1) * d - GNode.node_height / 2);
+//                    if (gNode.isDummy()) {
+//                        gNode.currentPosition.x = gNode.targetPosition.x;
+//                        gNode.currentPosition.y = gNode.targetPosition.y;
+//                    }
+//                }
+//            }
+//        }
+//        this.visibleLayers = maxLayer;
+        repaint();
+        animationTimer.start();
+
+    }
+    
+    private void showNextChanges() {
+        showChangesTimer = new Timer(200, new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                repaint();
+                edgesToBeRemovedfromMiniGraph.clear();
+            }
+        });
+        showChangesTimer.setRepeats(false);
+        showChangesTimer.start();
+    }
+
+
+
+    private void computeDiffs(List<Node> nodes, List<Edge> edges) {
+        // Remember the edges which are replaced 
+        edgesToBeRemovedfromMiniGraph.clear();
+        for (Edge oldEdge : currEdges) {
+            if (!existsInNewGraph(oldEdge, edges, nodes))
+            
+                edgesToBeRemovedfromMiniGraph.add(oldEdge);
+            
+        }
+        
+        if (currNodes != null) {
+            lastNodes.clear();
+            lastNodes.addAll(currNodes);
+        }
+        
         currEdges = edges;
         currNodes = nodes;
         int maxLayer = -1;
 
+        
         for (int i = 0; i < gNodes.length; i++) {
             GNode gNode = gNodes[i];
             if (isUsed(i) || !gNode.isDummy()) {
@@ -264,11 +253,19 @@ public class GraphDrawer extends JPanel implements ActionListener {
             }
         }
         this.visibleLayers = maxLayer;
-        repaint();
-        animationTimer.start();
-
     }
     
+    private boolean existsInNewGraph(Edge oldEdge, List<Edge> edges, List<Node> nodes) {
+        for (Edge edge : edges) {
+            if (currNodes.indexOf(oldEdge.startNode) == nodes.indexOf(edge.startNode) && currNodes.indexOf(oldEdge.endNode) == nodes.indexOf(edge.endNode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     protected void update() {
         update(this.currNodes, this.currEdges);
     }
@@ -311,15 +308,18 @@ public class GraphDrawer extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        boolean repaint = false;
-        for (int i = 0; i < gNodes.length; i++) {
-            repaint = gNodes[i].update() || repaint;
-        }
-
-        if (repaint) {
-            this.repaint();
-        } else {
-            animationTimer.stop();
+        if (!showChangesTimer.isRunning()) {
+            
+            boolean repaint = false;
+            for (int i = 0; i < gNodes.length; i++) {
+                repaint = gNodes[i].update() || repaint;
+            }
+            
+            if (repaint) {
+                this.repaint();
+            } else {
+                animationTimer.stop();
+            }
         }
     }
 

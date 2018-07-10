@@ -21,16 +21,30 @@ class ShapeProvider {
 
     private final static int ARROW_SIZE = 5;
 
-    protected static void drawArrow(Graphics g1, Edge e, GraphDrawer gd) {
+    protected static void drawArrow(Graphics g1, Edge e, GraphDrawer gd, boolean isRemoved) {
 
         double halfWidth = GNode.node_widht / 2;
         double halfHeight = GNode.node_height / 2;
+        GNode startingNode;
+        GNode targetNode;
+        if(isRemoved) {
+            startingNode = gd.gNodes[gd.lastNodes.indexOf(e.startNode)];
+            targetNode = gd.gNodes[gd.lastNodes.indexOf(e.endNode)];
+        } else {
+            startingNode = gd.gNodes[gd.currNodes.indexOf(e.startNode)];
+            targetNode = gd.gNodes[gd.currNodes.indexOf(e.endNode)];
+            
+        }
 
-        GNode startingNode = gd.gNodes[gd.currNodes.indexOf(e.startNode)];
-        GNode targetNode = gd.gNodes[gd.currNodes.indexOf(e.endNode)];
 
         Graphics2D g = (Graphics2D) g1.create();
-        g.setColor(Color.BLACK);
+        if (isRemoved) {
+            g.setColor(Color.RED);
+            
+        } else {
+            
+            g.setColor(Color.BLACK);
+        }
         double x1 = startingNode.currentPosition.x + halfWidth;
         double y1 = startingNode.currentPosition.y + halfHeight;
         double x2 = targetNode.currentPosition.x + halfWidth;

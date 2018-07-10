@@ -26,7 +26,7 @@ public class PhaseDisplayer extends JPanel{
         if (step == 0) {
             setInitalText();
         } else if (step <= layerCnt) {
-            this.phase.setText("Applying nodes up to layer " + step + ".. ");
+            this.phase.setText("Applying all nodes which are sources up to layer " + step + ".. ");
         } else {
             this.phase.setText("Applying dummy nodes for long edges.");
         }
