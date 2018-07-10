@@ -16,11 +16,11 @@ public class LayerAssignment {
     
     public LayerAssignment() {
         
-        // compute a random seed for random initail node positions
+        // Compute a random seed for random initial node positions
         seed = (int)System.currentTimeMillis();
         int a = seed;
         a = a /100000;
-        seed = seed - a * 100000;
+        seed = seed - (int)( Math.signum(a)*(a * 100000));
         
     }
 
@@ -98,7 +98,6 @@ public class LayerAssignment {
             //iteriere durch alle Layer zwischen source und target
             for (int i = source.getProperty(LAYER) + 1; i < target.getProperty(LAYER); i++) {
                 edgesToBeRemoved.clear();
-                System.out.println(lastDummy);
 
                 if (i == source.getProperty(LAYER) + 1) {
                     // Setze target der Kante auf einen neuen Dummyknoten
@@ -158,8 +157,6 @@ public class LayerAssignment {
                 Verlauf.add(elkGraphToMyGraph(elkGraph));
             }
         }
-        System.out.println(elkGraph.getContainedEdges());
-        System.out.println(elkGraph.getContainedEdges());
         return Verlauf;
     }
 

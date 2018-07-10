@@ -3,6 +3,11 @@ package src.tdojlafry.layered.layerAssignment.gui;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * 
+ * This panel only exists to display which phase of the algorithm is about to be visualized.
+ *
+ */
 public class PhaseDisplayer extends JPanel{
     
     JLabel phase;

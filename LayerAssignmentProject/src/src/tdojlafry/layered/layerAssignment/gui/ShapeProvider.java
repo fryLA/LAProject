@@ -17,6 +17,11 @@ import java.awt.geom.RoundRectangle2D;
 
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
 
+/**
+ * 
+ * Draws Arrows, Nodes and Layers
+ *
+ */
 class ShapeProvider {
 
     private final static int ARROW_SIZE = 5;
@@ -68,13 +73,6 @@ class ShapeProvider {
                 new int[] { 0, -ARROW_SIZE, ARROW_SIZE, 0 }, 4);
     }
 
-    // private static GradientPaint redGradiant = new GradientPaint(
-    // 0,
-    // 0,
-    // new Color(255, 102, 102),
-    // 1,
-    // 5,
-    // Color.BLACK, true);
     final static float dash1[] = { 10.0f };
     final static BasicStroke dashed =
             new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 10.0f, dash1, 0.0f);
@@ -84,12 +82,6 @@ class ShapeProvider {
         Graphics2D g = (Graphics2D) g1;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // redGradiant.getPoint1().setLocation(node.currentPosition.x + GraphDrawer.PADDING,node.currentPosition.y +
-        // GraphDrawer.PADDING);
-        // redGradiant.getPoint2().setLocation(node.currentPosition.x + GraphDrawer.PADDING + GNode.NODE_WIDTH/2,
-        // node.currentPosition.y + GraphDrawer.PADDING + GNode.NODE_HEIGHT/2);
-        //
-        
         Shape shape = null;
 
         if (node.moving()) {
@@ -158,12 +150,6 @@ class ShapeProvider {
             double layerHeight, boolean visible) {
         Graphics2D g = (Graphics2D) g1;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        // redGradiant.getPoint1().setLocation(node.currentPosition.x + GraphDrawer.PADDING,node.currentPosition.y +
-        // GraphDrawer.PADDING);
-        // redGradiant.getPoint2().setLocation(node.currentPosition.x + GraphDrawer.PADDING + GNode.NODE_WIDTH/2,
-        // node.currentPosition.y + GraphDrawer.PADDING + GNode.NODE_HEIGHT/2);
-        //
 
         if (visible) {
             GradientPaint blueGradient = new GradientPaint((int) startPosX, (int) startPosY, new Color(230, 250, 255),

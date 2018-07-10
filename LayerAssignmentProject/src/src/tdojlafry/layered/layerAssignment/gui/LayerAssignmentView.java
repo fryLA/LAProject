@@ -1,9 +1,7 @@
 package src.tdojlafry.layered.layerAssignment.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,7 +23,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import org.eclipse.elk.core.util.Pair;
@@ -33,15 +30,27 @@ import org.eclipse.elk.graph.ElkNode;
 
 import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 
+/**
+ * 
+ * Main Frame of the visualization.
+ * 
+ * Holda a Tabbed Pane "tabbedPane" all loaded graphs. Holds the Load Button
+ * 
+ * 
+ * The "tabbedPane" holds a SplitPane which itself holds a textual representation on the left and a graphical
+ * representation on the right.
+ * 
+ *
+ */
 public class LayerAssignmentView extends JFrame {
 
     private JTabbedPane tabbedPane;
 
     private static int width = 600;
     private static int height = 600;
-    
+
     static String reloadEvent = "reload file";
-    
+
     JButton loadButton;
     ActionListener loadButtonActionListener;
 
@@ -77,18 +86,18 @@ public class LayerAssignmentView extends JFrame {
         setVisible(true);
     }
 
-    public void visualize(List<SimpleGraph> graphs, File file) {
+    private void visualize(List<SimpleGraph> graphs, File file) {
 
         LayerAssignmentVisualizer visualizer = new LayerAssignmentVisualizer(graphs);
-        
+
         TextPanel textPanel = new TextPanel(file.getPath());
-        
+
         visualizer.createView();
         visualizer.initialize();
-        
+
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, textPanel, visualizer);
         splitPane.setOneTouchExpandable(true);
-        splitPane.setDividerLocation(Math.max(getWidth(), getPreferredSize().width) -  500);
+        splitPane.setDividerLocation(Math.max(getWidth(), getPreferredSize().width) - 500);
         splitPane.setResizeWeight(0.8);
         tabbedPane.addTab(file.getName(), splitPane);
 
@@ -96,6 +105,7 @@ public class LayerAssignmentView extends JFrame {
 
     }
 
+    // Loads a file if button is pressed an file is selected
     private void addLoadFileComponents() {
 
         loadButton = new JButton("Load File");
@@ -103,24 +113,24 @@ public class LayerAssignmentView extends JFrame {
         loadButton.setEnabled(true);
         loadButton.setPreferredSize(new Dimension(width, height / 10));
         loadButton.setSize(new Dimension(width, height / 10));
-        
+
         loadButtonActionListener = new ActionListener() {
-            
+
             public void actionPerformed(ActionEvent ae) {
-                
+
                 // Don't show the file chooser dialog in this case
                 if (ae.getActionCommand() == reloadEvent) {
-                    
+
                 }
                 // Relative path to application root!
                 JFileChooser fileChooser = new JFileChooser("testGraphs");
-                
+
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
 
                     File selectedFile = fileChooser.getSelectedFile();
                     doVisualize(selectedFile);
-                    
+
                 }
 
             }
@@ -130,91 +140,88 @@ public class LayerAssignmentView extends JFrame {
         getContentPane().add(loadButton, BorderLayout.AFTER_LAST_LINE);
 
     }
-    
+
+    // Performs the all steps which are necessary for the visualization to start and then starts the visualization.
     private void doVisualize(File selectedFile) {
-        ElkNode elkGraph = LayerAssignmentComputationManager.parseGraphToElkGraph(selectedFile.getPath()); //GuiTestDataCreator.createSimpleLayoutGraph(200);
+        ElkNode elkGraph = LayerAssignmentComputationManager.parseGraphToElkGraph(selectedFile.getPath()); // GuiTestDataCreator.createSimpleLayoutGraph(200);
 
         if (elkGraph != null) {
-            Pair<Boolean, List<SimpleGraph>> computation =
-                    LayerAssignmentComputationManager.computeNewInputs(elkGraph);
+            Pair<Boolean, List<SimpleGraph>> computation = LayerAssignmentComputationManager.computeNewInputs(elkGraph);
             if (computation.getFirst()) {
                 visualize(computation.getSecond(), selectedFile);
             } else {
-                JOptionPane.showMessageDialog(tabbedPane, null, "No valid input file.",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(tabbedPane, null, "No valid input file.", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(tabbedPane, null, "Graph is not acyclic.",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(tabbedPane, null, "Graph is not acyclic.", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
+    // Textual representation of graph with save button and logic
     private class TextPanel extends JPanel {
-        
+
         String path = "";
-        private String storeAllString="";
+        private String storeAllString = "";
         private JButton saveButton = new JButton("Save/Reload");
-        
+
         protected TextPanel(String p) {
             setLayout(new BorderLayout());
             path = p;
             fileRead();
             panels();
         }
-        
+
         /**
          * 
          */
         private static final long serialVersionUID = 1L;
         private JTextArea textArea = new JTextArea();
-        
-        private void fileRead(){
-            try{    
-              FileReader read = new FileReader(path);
-              Scanner scan = new Scanner(read);
-                 while(scan.hasNextLine()){
-                  String temp=scan.nextLine()+"\n";
-                  storeAllString=storeAllString+temp;
-                 }
-                 textArea.setText(storeAllString);
-          }
-            catch (Exception exception)
-             {
-             exception.printStackTrace();
-             }
-        } 
-        
-        private void panels(){        
-            JPanel panel = new JPanel(new GridLayout(1,1));
+
+        private void fileRead() {
+            try {
+                FileReader read = new FileReader(path);
+                Scanner scan = new Scanner(read);
+                while (scan.hasNextLine()) {
+                    String temp = scan.nextLine() + "\n";
+                    storeAllString = storeAllString + temp;
+                }
+                textArea.setText(storeAllString);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+
+        private void panels() {
+            JPanel panel = new JPanel(new GridLayout(1, 1));
             panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-           // JTextArea textArea = new JTextArea(storeAllString,0,70);
-             JScrollPane scrollBarForTextArea=new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-             panel.add(scrollBarForTextArea); 
-             add(panel, BorderLayout.PAGE_START);
+            // JTextArea textArea = new JTextArea(storeAllString,0,70);
+            JScrollPane scrollBarForTextArea = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            panel.add(scrollBarForTextArea);
+            add(panel, BorderLayout.PAGE_START);
             add(saveButton, BorderLayout.PAGE_END);
-            
+
             JPanel p = this;
-            
+
             saveButton.addActionListener(new ActionListener() {
-                
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     saveBtn();
                     tabbedPane.remove(p.getParent());
                     doVisualize(new File(path));
-                    
+
                 }
             });
         }
-        
-        private void saveBtn(){
-            File file = null;
-            FileWriter out=null;
 
+        private void saveBtn() {
+            File file = null;
+            FileWriter out = null;
 
             try {
                 file = new File(path);
-                out = new FileWriter(file);     
+                out = new FileWriter(file);
                 out.write(textArea.getText());
                 out.close();
             } catch (FileNotFoundException e) {
@@ -222,10 +229,8 @@ public class LayerAssignmentView extends JFrame {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-      }
-            
+        }
 
-        
     }
 
 }

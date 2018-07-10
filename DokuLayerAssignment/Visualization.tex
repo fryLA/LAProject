@@ -1,4 +1,4 @@
-
+  \section*{Visualisierung}
 Die GUI wurde mittels \textit{Java Swing} implementiert und nutzt ein \textit{JSplitPane}, um die textuelle Darstellung eines Graphen gleichzeitig mit der Visualisierung des auf diesen Graphen angewandten Algorithmus anzuzeigen. Der Graph ist hierbei in textueller Form editierbar, so dass der Benutzer komfortabel Änderungen im Graphen vornehmen kann.
 \newline 
 Da wir im Algorithmus keinen \textit{longest path} berechnen, um die Anzahl der nötigen Layer zu bestimmen, können wir in jedem Schritt alle Quellknoten einem Layer zuordnen. Quellknoten sind hierbei Knoten ohne eingehende Kanten, deren Startknoten noch keinem Layer zugewiesen wurden). Die tatsächliche Anzahl der benötigten Layer wird über die Länge der SimpleGraph Liste berechnet, in der noch keine Dummyknoten eingesetzt wurden. Diese Liste erhält die  Visualisierung bevor sie gestartet wird.
@@ -8,7 +8,11 @@ In welchem Schritt sich der Algorithmus gerade befindet, wird oberhalb des visua
 \subsection*{Öffnen eines Graphen}
 Momentan gibt es einen Unterordner \textit{testGraphs} im Projekt, der einige Testgraphen enthält. Der Inhalt dieses Ordners wird dem Benutzer im File Dialog angezeigt, wenn er auf \textit{Load File} in der Applikation klickt. Dies war zu Testzwecken sinnvoll und wurde bisher nicht angepasst.
 
-In der Visualisierung soll der Algorithmus für das Layer Assignment durch eine Schritt für Schritt durchführbare Animation dargestellt werden. Die Visualisierung soll voraussichtlich so aussehen:
+
+\subsection*{Speichern eines Graphen}
+Momentan gibt es einen Unterordner \textit{savedImages} im Projekt. Der Inhalt dieses Ordners wird dem Benutzer im File Dialog angezeigt, wenn er über den Rechtsklick in der Applikation und dann auf \textit{Save Image} klickt. Um nun die aktuelle Ansicht als Bild zu speichert, muss ein Name angegeben werden. \textbf{Achtung! Keinen Dateityp angeben!} Das Bildt wird als \textit{.png} im entsprechenden Ordner gespeichert.
+
+
 
 \subsection*{User Interface}
 \begin{enumerate}
@@ -21,7 +25,6 @@ In der Visualisierung soll der Algorithmus für das Layer Assignment durch eine 
     
     \item[Toolbar] Die Elemente für die Justierung und Steuerung der Visualisierung sind in einer Toolbar zusammengefasst. Das hat den Vorteil, dass man diese per \textit{drag and drop} aus dem Fester heraus- und auch wieder hineinziehen kann.
     
-    \item[Anzeige Speichern] Ruft der Benutzer per Rechtsklick und \textit{Save Image} den File Dialog aus, wird Default mäßig der Inhalt des Unterordners \textit{savedImages} im File Dialog angezeigt. Dies war zu Testzwecken sinnvoll und wurde bisher nicht angepasst.
 \end{enumerate}
 
 

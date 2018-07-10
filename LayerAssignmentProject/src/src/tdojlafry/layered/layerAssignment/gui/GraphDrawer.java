@@ -1,7 +1,6 @@
 package src.tdojlafry.layered.layerAssignment.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -9,24 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.Timer;
-
-import org.eclipse.elk.core.util.Pair;
 
 import src.tdojlafry.layered.layerAssignment.graphData.Edge;
 import src.tdojlafry.layered.layerAssignment.graphData.Node;
@@ -40,10 +28,12 @@ public class GraphDrawer extends JPanel implements ActionListener {
      * 
      */
     private static final long serialVersionUID = 8786962247310354215L;
+    
+    // Store data for the current step and the step before
     List<Node> currNodes;
     List<Node> lastNodes = new ArrayList<>();
     private List<Edge> currEdges;
-    private List<Edge> edgesToBeRemovedfromMiniGraph= new ArrayList<Edge>();;
+    private List<Edge> edgesToBeRemovedfromMiniGraph = new ArrayList<Edge>();;
 
     static final int PADDING = (int) Math.max(GNode.node_height, GNode.node_widht);
 
@@ -55,11 +45,17 @@ public class GraphDrawer extends JPanel implements ActionListener {
     private HashMap<Integer, Integer> nodesInLayer;
 
     public GNode gNodes[];
+    
+    // Timer for animation of node movement
     Timer animationTimer;
+    
+    // Timer started before animation starts. This shall only highlight the changes which will happen soon after.
     Timer showChangesTimer;
+    
+    // Some initial values for the GNodes to position themselves before this Panel is printed and has any size.
     private int actualWidth = 150;
     private int actualHeight = 150;
-    
+
     private int visibleLayers = -1;
 
     protected int timerDelay = 10;
@@ -70,7 +66,6 @@ public class GraphDrawer extends JPanel implements ActionListener {
         this.currNodes = nodes;
 
         this.nodesInLayer = nodesInLayer;
-
 
         this.addComponentListener(new ComponentListener() {
 
@@ -92,8 +87,9 @@ public class GraphDrawer extends JPanel implements ActionListener {
             public void componentHidden(ComponentEvent e) {
             }
         });
-
-
+        
+        
+        // Create a GNode for each Node in the Graph
         gNodes = new GNode[nodes.size()];
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.get(i);
@@ -104,8 +100,6 @@ public class GraphDrawer extends JPanel implements ActionListener {
         animationTimer = new Timer(timerDelay, this);
 
     }
-    
-
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -149,7 +143,7 @@ public class GraphDrawer extends JPanel implements ActionListener {
         for (Edge edge : currEdges) {
             ShapeProvider.drawArrow(g, edge, this, false);
         }
-        
+
         for (Edge edge : edgesToBeRemovedfromMiniGraph) {
             ShapeProvider.drawArrow(g, edge, this, true);
         }
@@ -164,42 +158,22 @@ public class GraphDrawer extends JPanel implements ActionListener {
     }
 
     private void update(List<Node> nodes, List<Edge> edges) {
+        
+        // Remember all changes
         computeDiffs(nodes, edges);
         
+        // Mark the changes in the view for the user
         showNextChanges();
-//        currEdges = edges;
-//        currNodes = nodes;
-//        int maxLayer = -1;
-//
-//        for (int i = 0; i < gNodes.length; i++) {
-//            GNode gNode = gNodes[i];
-//            if (isUsed(i) || !gNode.isDummy()) {
-//                Node node = nodes.get(i);
-//                if (node.layer == -1) {
-//                    gNode.setTargetPosition(node.position.x, node.position.y / MINIGRAPH_AREA_DIVISOR);
-//                } else {
-//                    maxLayer = Math.max(maxLayer, node.getLayer());
-//                    Rectangle2D layerRect = layers.get(node.layer);
-//                    gNode.targetPosition.x = layerRect.getCenterX() - (GNode.node_widht / 2);
-//
-//                    double d = (layerRect.getHeight()) / (nodesInLayer.get(node.layer) + 1);
-//                    gNode.targetPosition.y = layerRect.getMinY() + ((node.posInlayer + 1) * d - GNode.node_height / 2);
-//                    if (gNode.isDummy()) {
-//                        gNode.currentPosition.x = gNode.targetPosition.x;
-//                        gNode.currentPosition.y = gNode.targetPosition.y;
-//                    }
-//                }
-//            }
-//        }
-//        this.visibleLayers = maxLayer;
         repaint();
+        
+        // Start the movement of nodes and edges
         animationTimer.start();
 
     }
-    
+
     private void showNextChanges() {
         showChangesTimer = new Timer(200, new ActionListener() {
-            
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 repaint();
@@ -210,28 +184,26 @@ public class GraphDrawer extends JPanel implements ActionListener {
         showChangesTimer.start();
     }
 
-
-
     private void computeDiffs(List<Node> nodes, List<Edge> edges) {
-        // Remember the edges which are replaced 
+        // Remember the edges which are replaced
         edgesToBeRemovedfromMiniGraph.clear();
         for (Edge oldEdge : currEdges) {
             if (!existsInNewGraph(oldEdge, edges, nodes))
-            
+
                 edgesToBeRemovedfromMiniGraph.add(oldEdge);
-            
+
         }
-        
+
         if (currNodes != null) {
             lastNodes.clear();
             lastNodes.addAll(currNodes);
         }
-        
+
         currEdges = edges;
         currNodes = nodes;
         int maxLayer = -1;
 
-        
+        // Set the target positions of the GNodes
         for (int i = 0; i < gNodes.length; i++) {
             GNode gNode = gNodes[i];
             if (isUsed(i) || !gNode.isDummy()) {
@@ -254,26 +226,28 @@ public class GraphDrawer extends JPanel implements ActionListener {
         }
         this.visibleLayers = maxLayer;
     }
-    
+
     private boolean existsInNewGraph(Edge oldEdge, List<Edge> edges, List<Node> nodes) {
         for (Edge edge : edges) {
-            if (currNodes.indexOf(oldEdge.startNode) == nodes.indexOf(edge.startNode) && currNodes.indexOf(oldEdge.endNode) == nodes.indexOf(edge.endNode)) {
+            if (currNodes.indexOf(oldEdge.startNode) == nodes.indexOf(edge.startNode)
+                    && currNodes.indexOf(oldEdge.endNode) == nodes.indexOf(edge.endNode)) {
                 return true;
             }
         }
         return false;
     }
 
-
-
+    // Helper method, just calls an update on the current nodes and edges for repositioning.
     protected void update() {
         update(this.currNodes, this.currEdges);
     }
 
+ // Helper method. Calls an update on the new nodes and edges from newGraph.
     protected void update(SimpleGraph newGraph) {
         update(newGraph.getNodes(), newGraph.getEdges());
     }
 
+    // Prevents dummyNodes from appearing too soon
     private boolean isUsed(int i) {
         boolean used = false;
         if (i >= currNodes.size()) {
@@ -306,15 +280,16 @@ public class GraphDrawer extends JPanel implements ActionListener {
         animationTimer.start();
     }
 
+    // Start the timer and call update method of GNode
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!showChangesTimer.isRunning()) {
-            
+
             boolean repaint = false;
             for (int i = 0; i < gNodes.length; i++) {
                 repaint = gNodes[i].update() || repaint;
             }
-            
+
             if (repaint) {
                 this.repaint();
             } else {
@@ -322,7 +297,5 @@ public class GraphDrawer extends JPanel implements ActionListener {
             }
         }
     }
-
-    //
 
 }

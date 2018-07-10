@@ -8,7 +8,6 @@ import java.awt.FlowLayout;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -52,9 +51,6 @@ import src.tdojlafry.layered.layerAssignment.graphData.SimpleGraph;
 
 public class LayerAssignmentVisualizer extends JPanel implements ActionListener {
 
-    // JFrame frame;
-    
-    
     /**
      * 
      */
@@ -109,15 +105,13 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     private final String BCK = "bck";
     private final String RESET = "reset";
 
-    // for button enablements and stuff
-    private boolean initial = true; // enabled: play, fwd, bck. disabled: pause, reset.
+    // for button enablements
     private boolean paused = false; // enabled: play, fwd, bck, reset. disabled: pause.
-    private boolean active = false; // enabled: pause. disabled: play, fwd, bck, reset.
 
     private List<SimpleGraph> graphs;
 
     protected LayerAssignmentVisualizer(List<SimpleGraph> graphs) {
-        
+
         layerCnt = computeLayerCount(graphs);
 
         if (layerCnt == 0) {
@@ -177,13 +171,14 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         List<Node> nodes = initialDrawing.getNodes();
         List<Edge> edges = initialDrawing.getEdges();
 
+        // add all dummy nodes tho this graph so that the list of Gnodes in GraphDrawer is complete
         for (Node node : graphs.get(graphs.size() - 1).getNodes()) {
             if (node.isDummy) {
                 nodes.add(node);
             }
         }
 
-        // Remember how may nodes are stored in specified layer - need this for drawing.
+        // Remember how many nodes are stored in specified layer - need this for drawing.
         HashMap<Integer, Integer> nodesInLayer = new HashMap<>();
         SimpleGraph finalGraph = graphs.get(graphs.size() - 1);
 
@@ -206,7 +201,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     }
 
     protected void createView() {
-        
+
         // Sset layout of this panel
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(400, 400));
@@ -221,7 +216,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         rootPanel = new JPanel();
         rootPanel.addMouseListener(new PopClickListener());
         rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.PAGE_AXIS));
-        
+
         Box boxes[] = new Box[2];
         boxes[0] = Box.createHorizontalBox();
         boxes[1] = Box.createHorizontalBox();
@@ -230,30 +225,27 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         boxes[1].createGlue();
 
         rootPanel.add(boxes[0]);
-        rootPanel.add(boxes[1]);  
-        
+        rootPanel.add(boxes[1]);
+
         add(rootPanel);
 
-        
         // Create graph panel
         layerPanel = new JPanel();
         GridLayout g = new GridLayout(1, 1);
         layerPanel.setLayout(g);
         layerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        
+
         // Displays in which phase of the layer assignment we are
-        pd = new PhaseDisplayer(layerCnt); 
-        
-        
+        pd = new PhaseDisplayer(layerCnt);
+
         pd.setPreferredSize(new Dimension(getPreferredSize().width, 20));
         pd.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
         layerPanel.setPreferredSize(new Dimension(getPreferredSize().width, getPreferredSize().height - 20));
-        
+
         boxes[0].add(pd);
 
         boxes[1].add(layerPanel);
-        
-        
+
     }
 
     private void addButtons(JToolBar toolbar) {
@@ -287,8 +279,8 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                     return;
                 } else if (!input.matches("\\d+")) {
                     JOptionPane.showMessageDialog(null,
-                            "Error: Not a number. Please enter number between 0 and " + (graphs.size() - 1) + ".", "Error Massage",
-                            JOptionPane.ERROR_MESSAGE);
+                            "Error: Not a number. Please enter number between 0 and " + (graphs.size() - 1) + ".",
+                            "Error Massage", JOptionPane.ERROR_MESSAGE);
 
                     return;
                 } else if (Integer.parseInt(input) < 0 || Integer.parseInt(input) > graphs.size() - 1) {
@@ -485,7 +477,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         case BCK:
             enableComponents(Arrays.asList(playButton, jumpFwd, resetButton, stepSizeText, stepSlider), true);
             enableComponents(Arrays.asList(pauseButton), false);
-            
+
             currentStep = Math.max(currentStep - stepSize, 0);
             pd.changeText(currentStep);
             gd.update(graphs.get(currentStep));
@@ -509,7 +501,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
     private static final int toolbarRows = 2;
 
     private Dimension setDimensionOfToolbarComponent(int multX, int multY) {
-        return new Dimension((Math.max(this.getWidth(),this.getPreferredSize().width) / toolbarDivisor) * multX,
+        return new Dimension((Math.max(this.getWidth(), this.getPreferredSize().width) / toolbarDivisor) * multX,
                 ((toolbarHeight + 2 * tooblarPadding) / toolbarRows) * multY);
     }
 
@@ -527,21 +519,14 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
                     comp.setMinimumSize(new Dimension(50, toolbarHeight / toolbarRows));
                 } else if (comp instanceof JButton) {
                 }
-                
+
                 comp.repaint();
             }
         }
 
     }
-    
-    /**
-     * Save the Panel as image with the name and the type in parameters
-     *
-     * @param name
-     *            name of the file
-     * @param type
-     *            type of the file
-     */
+
+    // Save the Panel as image with the name and the type in parameters
     public void saveImage(String name, String type) {
         BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = image.createGraphics();
@@ -551,7 +536,7 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
             int returnValue = fileChooser.showOpenDialog(null);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                        
+
                 ImageIO.write(image, type, new File(selectedFile + "." + type));
             }
         } catch (Exception e) {
@@ -569,30 +554,30 @@ public class LayerAssignmentVisualizer extends JPanel implements ActionListener 
         public PopUpMenu() {
             anItem = new JMenuItem("Save as Image");
             anItem.addActionListener(new ActionListener() {
-                
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     saveImage("image", "png");
-                    
+
                 }
             });
             add(anItem);
         }
 
     }
-    
+
     class PopClickListener extends MouseAdapter {
-        public void mousePressed(MouseEvent e){
+        public void mousePressed(MouseEvent e) {
             if (e.isPopupTrigger())
                 doPop(e);
         }
 
-        public void mouseReleased(MouseEvent e){
+        public void mouseReleased(MouseEvent e) {
             if (e.isPopupTrigger())
                 doPop(e);
         }
 
-        private void doPop(MouseEvent e){
+        private void doPop(MouseEvent e) {
             PopUpMenu menu = new PopUpMenu();
             menu.show(e.getComponent(), e.getX(), e.getY());
         }
